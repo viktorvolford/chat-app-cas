@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "chat-app-cas": {
+      "hosting": {
+        "chat-app": [
+          "chat-app-cas"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "chat-app-cas"
+  }
+}

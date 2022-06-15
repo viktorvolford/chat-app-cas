@@ -1,0 +1,68 @@
+$title : rgb(60, 193, 255);
+$font : white;
+$hover: rgb(138, 138, 138);
+
+.app-title a{
+    color: $title;
+    font-size: 22pt;
+    margin: 1em 0;
+}
+
+.navbar ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li{
+	margin-bottom: 1em;
+	margin-left: 1em;
+}
+
+.navbar ul a{
+	color: $font;
+	font-weight: 300;
+	font-size: 20pt;
+	text-decoration: none;
+}
+
+.navbar{
+    display: none;
+}
+
+@media screen and (min-width: 1000px)
+{
+	.hamburger{
+		display: none;
+	}
+	
+	mat-toolbar{
+		display: grid;
+		grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr;
+	}
+	
+	.app-title{
+		grid-column: 2 / 3;
+	}
+
+	.navbar{
+		grid-column: 3 / 4;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
+	.navbar ul{
+		display: flex;
+	}
+
+	.navbar li{
+		margin-bottom: 0;
+		margin-left: 1.5em;
+	}
+
+    .navigation-items li a:hover{
+        color: $hover;
+    }
+
+}

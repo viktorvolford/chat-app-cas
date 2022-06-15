@@ -1,0 +1,37 @@
+<div class="main_component">
+    <div class="div-flex">
+        <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+            <h1>Register a new account</h1>
+            <mat-form-field>
+                <mat-label for="email">E-mail address:</mat-label>
+                <input matInput type="text" formControlName="email"/>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label for="email">Username:</mat-label>
+                <input matInput type="text" formControlName="username"/>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label for="password">Password:</mat-label>
+                <input matInput type="password" formControlName="password"/>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label for="password">Password confirmation:</mat-label>
+                <input matInput type="password" formControlName="rePassword"/>
+            </mat-form-field>
+            <div formGroupName="name">
+                <mat-form-field>
+                    <mat-label for="firstname">First name:</mat-label>
+                    <input matInput type="text" formControlName="firstname"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label for="lastname">Last name:</mat-label>
+                    <input matInput type="text" formControlName="lastname"/>
+                </mat-form-field>
+            </div>
+            <span>
+                <span><button mat-raised-button color="primary" type="submit">Submit</button></span>
+                <span><button mat-raised-button color="primary" type="reset" (click)="goBack()">I already have an account</button></span>
+            </span>
+        </form>
+    </div>
+</div>
