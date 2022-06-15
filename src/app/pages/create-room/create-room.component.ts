@@ -8,6 +8,7 @@ import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-create-room',
@@ -64,7 +65,7 @@ export class CreateRoomComponent implements OnInit {
     const value = event.value;
 
     // Add our member
-    if (!this.selectedMembers.has(value)) {
+    if (!this.selectedMembers.has(value) && value in this.allUsers.map(user => user.username)) {
       this.selectedMembers.add(value);
     }
 
