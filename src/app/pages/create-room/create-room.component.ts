@@ -45,7 +45,7 @@ export class CreateRoomComponent implements OnInit {
     });
     this.filteredUsers = this.roomForm.get('member')?.valueChanges.pipe(
       startWith('') as any,
-      map((member: string | null) => (member ? this._filter(member) : this.allUsers.slice())),
+      map((member: string | null) => (member ? this._filter(member) : this.allUsers.map(user => user.username).slice())),
     ) as any;
   }
 
