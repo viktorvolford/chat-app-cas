@@ -23,8 +23,8 @@ export class CreateRoomComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   allUsers = new Array<User>();
-  selectedMembers = new Set<string>();
-  filteredUsers?: Observable<string[]>;
+  selectedMembers = new Set<User>();
+  filteredUsernames?: Observable<string[]>;
 
   usersLoadingSubscription?: Subscription;
 
@@ -44,7 +44,7 @@ export class CreateRoomComponent implements OnInit {
     this.usersLoadingSubscription = this.userService.getAll().subscribe((data: Array<User>) => {
       this.allUsers = data;
     });
-    this.filteredUsers = this.roomForm.get('member')?.valueChanges.pipe(
+    this.filteredUsernames = this.roomForm.get('member')?.valueChanges.pipe(
       startWith('') as any,
       map((member: string | null) => (member ? this._filter(member) : this.allUsers.map(user => user.username).slice())),
     ) as any;
@@ -65,24 +65,27 @@ export class CreateRoomComponent implements OnInit {
     const value = event.value;
 
     // Add our member
-    if (!this.selectedMembers.has(value) && value in this.allUsers.map(user => user.username)) {
-      this.selectedMembers.add(value);
+    if (!this.selectedMembers.has(this.allUsers.find(user => user.username === value) as User) 
+      && this.allUsers.map(user => user.username).includes(value)) {
+      this.selectedMembers.add(this.allUsers.find(user => user.username === value) as User);
     }
 
     // Clear the input value
     event.chipInput!.clear();
 
     this.roomForm.get('member')?.setValue(null);
+    console.log(this.selectedMembers);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedMembers.add(event.option.viewValue);
+    this.selectedMembers.add(this.allUsers.find(user => user.username === event.option.viewValue) as User);
     (this.memberInput as any).nativeElement.value = '';
     this.roomForm.get('member')?.setValue(null);
   }
 
   removeChip(member: any){
     const index = this.selectedMembers.delete(member);
+    console.log(this.selectedMembers);
   }
 
   private _filter(value: string): string[] {
