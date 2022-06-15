@@ -15,4 +15,8 @@
         <mat-icon>collections</mat-icon>
         <span>Conversations</span>
     </a>
+    <a mat-list-item *ngIf="loggedInUser" routerLink="/create-room" (click)="close()">
+        <mat-icon>add_circle</mat-icon>
+        <span>Create room</span>
+    </a>
 </mat-nav-list>

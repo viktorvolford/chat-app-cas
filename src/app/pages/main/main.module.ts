@@ -5,7 +5,7 @@ import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { RoomListComponent } from './convo-list/room-list.component';
+import { RoomListComponent } from './room-list/room-list.component';
 import { MatCardModule } from '@angular/material/card';
 
 

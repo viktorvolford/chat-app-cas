@@ -2,7 +2,7 @@
     <mat-spinner color="accent"></mat-spinner>
 </span>
 
-<div class="main_component">
+<div class="main_container">
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div>
             <h1>Log into your account</h1>
@@ -10,7 +10,7 @@
                 <mat-label for="email">E-mail address:</mat-label>
                 <input matInput type="text" formControlName="email">
                 <mat-error *ngIf="loginForm.get('email')?.invalid">
-                   Invalid e-mail format!
+                    Invalid e-mail format!
                 </mat-error>
             </mat-form-field>
             <mat-form-field>

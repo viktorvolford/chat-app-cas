@@ -1,8 +1,9 @@
-<div class="main_component">
+<div class="main_container">
     <mat-button-toggle-group name="visibility" aria-label="Visibility" value="public" (change)="onToggleChange($event.source.value)">
         <mat-button-toggle value="public">Public</mat-button-toggle>
         <mat-button-toggle value="private">Private</mat-button-toggle>
         <mat-button-toggle value="protected">Password protected</mat-button-toggle>
     </mat-button-toggle-group>
-    <app-room-list></app-room-list>
+    <app-room-list [chosenVisibility]="this.chosenVisibility"></app-room-list>
 </div>
+

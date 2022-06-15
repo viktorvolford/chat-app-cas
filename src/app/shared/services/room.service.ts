@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { user } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Room } from '../models/Room';
@@ -27,7 +28,8 @@ export class RoomService {
       return this.getPublicRooms();
     }
     else if(type === 'private'){
-      return;//return this.getPrivateRooms();
+      const uid = (localStorage.getItem('user') as string).slice(1, -1);
+      return this.getPrivateRooms(uid);
     }
     else{
       return this.getProtectedRooms();
@@ -39,7 +41,7 @@ export class RoomService {
   }
 
   getPrivateRooms(user_id: string) {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'private').where('access', 'array-contains', user_id)).valueChanges();
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'private').where('members', 'array-contains', user_id)).valueChanges();
   }
 
   getProtectedRooms() {

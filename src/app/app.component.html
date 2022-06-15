@@ -18,6 +18,7 @@
                     <li *ngIf="!(loggedInUser)"><a routerLink="/login">Login</a></li>
                     <li *ngIf="!(loggedInUser)"><a routerLink="/signup">Register</a></li>
                     <li *ngIf="loggedInUser"><a routerLink="/main">Conversations</a></li>
+                    <li *ngIf="loggedInUser"><a routerLink="/create-room">Create room</a></li>
                 </ul>
             </div>
         </mat-toolbar>
