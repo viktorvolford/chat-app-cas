@@ -1,6 +1,26 @@
 <div class="main_container">
-    CONVO WORKS!
-    <div *ngFor="let message of messages">
-        {{message.content}}
+    <h1>{{targetName}}</h1>
+    <div *ngFor="let message of messages; let i = index;">
+        <mat-card [ngStyle]="{'background-color' : i % 2 === 0 ? '#aee3fc' : '#579af7'}" class="mat-elevation-z4">
+            <mat-card-header>
+                <mat-card-title>
+                    {{ getUsername(message.sender_id) }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                {{ message.content }}
+            </mat-card-content>
+        </mat-card>
     </div>
+    <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+        <mat-form-field>
+            <mat-label for="content">Message: </mat-label>
+            <textarea matInput rows="10" cols="50" formControlName="content" placeholder="Say something..."></textarea>
+        </mat-form-field>
+    
+        <div class="break"></div>
+        <span>
+            <span><button mat-raised-button color="primary" type="submit">Send</button></span>
+        </span>
+    </form>
 </div>
