@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
       private authService: AuthService
       ) { }
       
-      ngOnInit(): void {
-          this.addValidators();
+      ngOnInit(): void {     
+        this.addValidators();
       }
       
       login(){

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-room-list',
@@ -16,7 +17,11 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
 
   roomsLoadingSubscription?: Subscription;
 
-  constructor(private roomService: RoomService) { }
+  constructor(
+    private roomService: RoomService,
+    private router: Router,
+    private route: ActivatedRoute
+    ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.roomsLoadingSubscription = this.roomService.getRooms(this.chosenVisibility as string).subscribe((data: Array<Room>) => {
@@ -28,6 +33,14 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.roomsLoadingSubscription?.unsubscribe;
+  }
+
+  openChatroom(id: string){
+    this.router.navigate(['/conversation'],{queryParams: {'type': 'room', 'id': id}}).then(() => {
+      console.log(this.route.snapshot.queryParamMap.get('type'));
+      console.log(this.route.snapshot.queryParamMap.get('id'));
+    });
+    
   }
 
 }

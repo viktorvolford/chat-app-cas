@@ -8,7 +8,8 @@ import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { user } from '@angular/fire/auth';
+import { Room } from '../../shared/models/Room';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-room',
@@ -31,13 +32,15 @@ export class CreateRoomComponent implements OnInit {
   roomForm = this.createForm({
     name: '',
     password: '',
-    member: ''
+    member: '',
+
   });
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private router: Router
     ) {}
 
   ngOnInit(): void {
@@ -96,6 +99,21 @@ export class CreateRoomComponent implements OnInit {
       .filter(username => username.toLowerCase().includes(filterValue));
   }
 
-  onSubmit(){}
+  onSubmit(){
+    this.roomService.create({
+            id: '',
+            name: this.roomForm.get('name')?.value as string,
+            members: Array.from(this.selectedMembers).map(user => user.id),
+            visibility: this.chosenGroup as string,
+            owner_id: localStorage.getItem('user'),
+            password: this.roomForm.get('password')?.value as string,
+          } as Room)
+    .then(() => { 
+        console.log('User added succesfully!');
+        this.router.navigateByUrl('/main');
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
 }

@@ -16,7 +16,9 @@ export class RoomService {
   ) { }
 
   create(room: Room) {
-    return this.afs.collection<Room>(this.collectionName).doc(room.id).set(room);
+    return this.afs.collection<Room>(this.collectionName).add(room).then(res => {
+      this.afs.collection<Room>(this.collectionName).doc(res.id).update({id: res.id});
+    });
   }
 
   getById(id: string) {

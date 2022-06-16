@@ -9,9 +9,12 @@
             blahblah
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button color="primary" type="button">
+            <a [routerLink]="['conversation']" [queryParams] ="{'type':'room', 'id': room.id}">
                 Join room
-            </button>
+            </a>
+            <!-- <button mat-raised-button color="primary" type="button" (click)="openChatroom(room.id)">
+                Join room
+            </button> -->
         </mat-card-actions>
     </mat-card>
 </div>

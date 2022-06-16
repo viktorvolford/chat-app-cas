@@ -13,7 +13,7 @@
             </mat-radio-group>
             <mat-form-field *ngIf="chosenGroup === 'protected'">
                 <mat-label for="name">Room password:</mat-label>
-                <input matInput type="password" formControlName="name"/>
+                <input matInput type="password" formControlName="password">
             </mat-form-field>
 
             <mat-form-field *ngIf="chosenGroup === 'private'" class="example-chip-list" appearance="fill">

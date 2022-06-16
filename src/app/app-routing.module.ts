@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'create-room', loadChildren: () => import('./pages/create-room/create-room.module').then(m => m.CreateRoomModule) },
   { 
     path: '',
-    redirectTo: '/main',
+    redirectTo: '/login',
     pathMatch: 'full' 
   },
   { 

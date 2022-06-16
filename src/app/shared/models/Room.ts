@@ -1,6 +1,6 @@
 export interface Room {
     id: string,
-    access: Array<string>,
+    members: Array<string>,
     name: string,
     owner_id: string,
     visibility: string,
