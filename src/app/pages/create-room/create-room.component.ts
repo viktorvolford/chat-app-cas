@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-room',
@@ -40,7 +41,8 @@ export class CreateRoomComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private roomService: RoomService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
     ) {}
 
   ngOnInit(): void {
@@ -109,7 +111,7 @@ export class CreateRoomComponent implements OnInit {
             password: this.roomForm.get('password')?.value as string,
           } as Room)
     .then(() => { 
-        console.log('User added succesfully!');
+        this._snackBar.open('Room has been created successfully!', 'Great', {duration: 2000});
         this.router.navigateByUrl('/main');
     }).catch(error => {
       console.log(error);

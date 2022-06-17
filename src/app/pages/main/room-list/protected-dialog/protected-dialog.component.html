@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Password protection</h2>
+<mat-dialog-content>
+    <p>
+        Enter <b>{{data.roomName}}</b>'s secret key below:
+    </p>
+    <mat-form-field appearance="fill">
+        <mat-label>Password:</mat-label>
+        <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="enteredPassword">
+        <mat-icon-button class="hide_button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-icon-button>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="enteredPassword">Enter</button>
+    <button mat-button [mat-dialog-close]="null">Cancel</button>
+</mat-dialog-actions>

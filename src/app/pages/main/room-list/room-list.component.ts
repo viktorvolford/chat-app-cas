@@ -3,6 +3,8 @@ import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog'
+import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.component';
 
 @Component({
   selector: 'app-room-list',
@@ -16,14 +18,15 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
   rooms: Array<Room> = new Array<Room>();
 
   roomsLoadingSubscription?: Subscription;
+  dialogSubscription?: Subscription;
 
   constructor(
     private roomService: RoomService,
     private router: Router,
-    private route: ActivatedRoute
+    private dialog: MatDialog
     ) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.roomsLoadingSubscription = this.roomService.getRooms(this.chosenVisibility as string).subscribe((data: Array<Room>) => {
       this.rooms = data;
     });
@@ -32,15 +35,24 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this.roomsLoadingSubscription?.unsubscribe;
+    this.roomsLoadingSubscription?.unsubscribe();
+    this.dialogSubscription?.unsubscribe();
   }
 
   openChatroom(id: string){
-    this.router.navigate(['/conversation'],{queryParams: {'type': 'room', 'id': id}}).then(() => {
-      console.log(this.route.snapshot.queryParamMap.get('type'));
-      console.log(this.route.snapshot.queryParamMap.get('id'));
+    this.router.navigate(['main/conversation'], {queryParams: {type: 'room', id: id}});
+  }
+
+  openDialog(room: Room){
+    const dialogRef = this.dialog.open(ProtectedDialogComponent, {data: {roomName: room.name}});
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if(result === room.password){
+        this.openChatroom(room.id);
+      } else if(result !== null){
+        console.log("The password given was incorrect.");
+      }
     });
-    
   }
 
 }

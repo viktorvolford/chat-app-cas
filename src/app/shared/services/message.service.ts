@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,33 @@ export class MessageService {
   }
 
   getPersonalMessages(firstId: string, secondId: string) {
-    return this.afs.collection<Message>(this.collectionName, ref => ref
+    /* return this.afs.collection<Message>(this.collectionName, ref => ref
       .where('type', '==', 'personal')
       .where('sender_id', 'in', [firstId, secondId])
       .where('target_id', 'in', [firstId, secondId])
       .orderBy('date', 'asc'))
-      .valueChanges();
+      .valueChanges(); */
+
+     const first = this.afs.collection<Message>(this.collectionName, ref => ref
+        .where('type', '==', 'personal')
+        .where('sender_id', '==', firstId)
+        .where('target_id', '==', secondId)
+        .orderBy('date', 'asc'))
+        .valueChanges();
+      const second = this.afs.collection<Message>(this.collectionName, ref => ref
+        .where('type', '==', 'personal')
+        .where('sender_id', '==', secondId)
+        .where('target_id', '==', firstId)
+        .orderBy('date', 'asc'))
+        .valueChanges();
+
+      return combineLatest([first, second]).pipe(
+        switchMap(messages => {
+          const [firstMes, secondMes] = messages;
+          const combined = firstMes.concat(secondMes);
+          return of(combined);
+        })
+      );
   }
 
   getById(id: string) {

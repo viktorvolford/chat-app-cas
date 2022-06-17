@@ -6,6 +6,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 
 import { User } from '../../shared/models/User'
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signup',
@@ -13,6 +14,8 @@ import { User } from '../../shared/models/User'
   styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
+
+  hide: boolean = true;
 
   signUpForm = this.createForm({
     email: '',
@@ -30,16 +33,16 @@ export class SignupComponent implements OnInit {
     private location: Location,
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private _snackBar: MatSnackBar
     ) { }
 
   ngOnInit(): void {
   }
 
   createForm(model: any) {
-    let emailRegex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
     let formGroup = this.formBuilder.group(model);
-    formGroup.get('email')?.addValidators([Validators.required, Validators.pattern(emailRegex)]);
+    formGroup.get('email')?.addValidators([Validators.required, Validators.email]);
     formGroup.get('username')?.addValidators([Validators.required, Validators.minLength(5)]);
     formGroup.get('password')?.addValidators([Validators.required, Validators.minLength(8)]);
     formGroup.get('rePassword')?.addValidators([Validators.required, Validators.minLength(8)]);
@@ -65,7 +68,7 @@ export class SignupComponent implements OnInit {
         }
       };
       this.userService.create(user).then(_ => {
-        console.log('User added succesfully!');
+        this._snackBar.open('User has been created successfully!', 'Great', {duration: 2000});
         this.router.navigateByUrl('/main');
       }).catch(error => {
         console.log(error);

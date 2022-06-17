@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Room } from '../../../shared/models/Room';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
@@ -59,7 +58,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
         });
 
         if(this.type === 'personal'){
-          this.messageLoadingSubscription = this.messageService.getPersonalMessages(this.id, localStorage.getItem('user') as string).subscribe(result => {
+          this.messageLoadingSubscription = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string).slice(1,-1)).subscribe(result => {
             this.messages = result;
           })
         } else {

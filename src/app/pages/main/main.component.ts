@@ -16,7 +16,6 @@ export class MainComponent implements OnInit {
 
   onToggleChange(value: string): void {
     this.chosenVisibility = value;
-    console.log(this.chosenVisibility);
   }
 
 }
