@@ -1,3 +1,8 @@
 .main_container {
     place-content: start center;
 }
+
+mat-card-footer {
+    text-align: end;
+    padding: 0 0.5rem;
+}

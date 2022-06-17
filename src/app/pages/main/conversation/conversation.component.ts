@@ -99,6 +99,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
     }
   }
 
+  getName(id: string){
+    const targetPerson = this.users?.find(user => user.id === id);
+    return targetPerson?.name.firstname + ' ' + targetPerson?.name.lastname;
+  }
+
   getUsername(id: string){
     return this.users?.find(user => user.id === id)?.username;
   }
