@@ -28,6 +28,10 @@ export class UserService {
     return this.afs.collection<User>(this.collectionName).doc(user.id).set(user);
   }
 
+  updateTime(id: string, date: number){
+    this.afs.collection<User>(this.collectionName).doc(id).update({last_active: date});
+  }
+
   delete(id: string) {
     return this.afs.collection<User>(this.collectionName).doc(id).delete();
   }

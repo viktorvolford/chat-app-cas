@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class AuthService {
   keepAlive?: any;
 
-  constructor(private auth: AngularFireAuth) {}
+  constructor(
+    private auth: AngularFireAuth,
+    private userService: UserService
+    ) {}
 
   login(email: string, password: string){
     return this.auth.signInWithEmailAndPassword(email, password);
@@ -28,7 +32,11 @@ export class AuthService {
   }
 
   startKeepAlive(){
-    this.keepAlive = setInterval(() => console.log("Still logged in..."), 2000);
+    this.keepAlive = setInterval(() => {
+      console.log("Still logged in...");
+      const user = localStorage.getItem('user')?.slice(1, -1);
+      this.userService.updateTime(user as string, new Date().getTime());
+    }, 2000);
   }
 
   stopKeepAlive(){

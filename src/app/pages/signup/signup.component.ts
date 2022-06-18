@@ -65,7 +65,8 @@ export class SignupComponent implements OnInit {
         name: {
           firstname: this.signUpForm.get('name.firstname')?.value,
           lastname: this.signUpForm.get('name.lastname')?.value
-        }
+        },
+        last_active: new Date().getTime()
       };
       this.userService.create(user).then(_ => {
         this._snackBar.open('User has been created successfully!', 'Great', {duration: 2000});
