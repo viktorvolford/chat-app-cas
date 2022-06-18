@@ -42,7 +42,7 @@ export class CreateRoomComponent implements OnInit {
     private userService: UserService,
     private roomService: RoomService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar
     ) {}
 
   ngOnInit(): void {
@@ -111,7 +111,7 @@ export class CreateRoomComponent implements OnInit {
             password: this.roomForm.get('password')?.value as string,
           } as Room)
     .then(() => { 
-        this._snackBar.open('Room has been created successfully!', 'Great', {duration: 2000});
+        this.snackBar.open('Room has been created successfully!', 'Great', {duration: 2000});
         this.router.navigateByUrl('/main');
     }).catch(error => {
       console.log(error);
