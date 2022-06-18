@@ -32,11 +32,11 @@ export class AuthService {
   }
 
   startKeepAlive(){
+    const user = localStorage.getItem('user')?.slice(1, -1);
+    this.userService.updateTime(user as string, new Date().getTime());
     this.keepAlive = setInterval(() => {
-      console.log("Still logged in...");
-      const user = localStorage.getItem('user')?.slice(1, -1);
       this.userService.updateTime(user as string, new Date().getTime());
-    }, 2000);
+    }, 30000);
   }
 
   stopKeepAlive(){

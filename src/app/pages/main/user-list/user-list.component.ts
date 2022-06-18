@@ -34,4 +34,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.router.navigate(['main/conversation'], {queryParams: {type: 'personal', id: id}});
   }
 
+  isOnline(user: User): boolean {
+    return new Date().getTime() - user.last_active > 50000 ? false : true;
+  }
+
 }
