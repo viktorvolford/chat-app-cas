@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './shared/services/auth.service';
 
@@ -16,7 +17,8 @@ export class AppComponent {
   authSubscription?: Subscription;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ){}
 
   ngOnInit(){
@@ -48,6 +50,8 @@ export class AppComponent {
 
   logout(_?: boolean){
     this.authService.logout().then(() => {
+      this.loggedInUser = '';
+      this.router.navigateByUrl('/login');
       console.log('Logged out successfuly!');
       this.authService.stopKeepAlive();
     }).catch(error => {
