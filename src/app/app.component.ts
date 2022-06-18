@@ -22,12 +22,17 @@ export class AppComponent {
   ngOnInit(){
     this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
-      this.loggedInUser = user?.uid;
-      localStorage.setItem('user', JSON.stringify(this.loggedInUser));
+        if(user !== null) {
+          this.loggedInUser = user?.uid;
+          console.log(user);
+          localStorage.setItem('user', JSON.stringify(this.loggedInUser));
+          this.authService.startKeepAlive();
+        }
     }, 
     error: (e) => {
       console.log(e);
-      localStorage.setItem('user', JSON.stringify(null));
+      localStorage.removeItem('user');
+      this.authService.stopKeepAlive();
     }});
   }
 
@@ -44,6 +49,7 @@ export class AppComponent {
   logout(_?: boolean){
     this.authService.logout().then(() => {
       console.log('Logged out successfuly!');
+      this.authService.stopKeepAlive();
     }).catch(error => {
       console.log(error);
     });

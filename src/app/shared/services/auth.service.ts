@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   providedIn: 'root'
 })
 export class AuthService {
+  keepAlive?: any;
 
   constructor(private auth: AngularFireAuth) {}
 
@@ -24,5 +25,13 @@ export class AuthService {
     return this.auth.signOut().then(() => {
       localStorage.removeItem('user');
     });
+  }
+
+  startKeepAlive(){
+    this.keepAlive = setInterval(() => console.log("Still logged in..."), 2000);
+  }
+
+  stopKeepAlive(){
+    clearInterval(this.keepAlive);
   }
 }
