@@ -1,6 +1,11 @@
 <h1>All users</h1>
 <div *ngFor="let user of users" class="user" (click)="openConversation(user.id)">
-    <span>{{user.username}}</span>
-    <mat-icon matSuffix *ngIf="!isOnline(user)" style="color: yellow">bedtime</mat-icon>
-    <mat-icon matSuffix *ngIf="isOnline(user)" style="color: green">circle</mat-icon>
+    <span class="username">
+        {{user.username}} 
+        <span class="you" *ngIf="user.id === loggedInUser">(You)</span> 
+    </span>
+    <span class="activity-indicator">
+        <mat-icon matSuffix *ngIf="!isOnline(user)" style="color: yellow">bedtime</mat-icon>
+        <mat-icon matSuffix *ngIf="isOnline(user)" style="color: green">circle</mat-icon>
+    </span> 
 </div>

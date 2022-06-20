@@ -12,6 +12,7 @@ import { UserService } from '../../../shared/services/user.service';
 export class UserListComponent implements OnInit, OnDestroy {
 
   users?: Array<User>;
+  loggedInUser?: string;
 
   userLoadingSubscription?: Subscription;
 
@@ -23,6 +24,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userLoadingSubscription = this.userService.getAll().subscribe(result => {
       this.users = result;
+      this.loggedInUser = localStorage.getItem('user')?.slice(1,-1) as string;
     });
   }
 

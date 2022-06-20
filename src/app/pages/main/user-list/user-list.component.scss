@@ -15,6 +15,15 @@ h1 {
     cursor: pointer;
 }
 
-.user span{
+.user .username{
     margin-left: 2rem;
+    justify-self: start;
+}
+
+.you {
+    margin: 0 0.3rem;
+}
+
+.activity-indicator{
+    justify-self: flex-end;
 }
