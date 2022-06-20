@@ -6,8 +6,8 @@ h1 {
 .user {
     height: 4rem;
     border: 1px solid black;
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
 }
 
 .user:hover {
@@ -16,8 +16,11 @@ h1 {
 }
 
 .user .username{
-    margin-left: 2rem;
-    justify-self: start;
+    margin: 0 2rem;
+    float: left;
+    height: 100%;
+    display: grid;
+    place-content: center;
 }
 
 .you {
@@ -25,5 +28,9 @@ h1 {
 }
 
 .activity-indicator{
-    justify-self: flex-end;
+    float: right;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    margin: 0 2rem;
 }
