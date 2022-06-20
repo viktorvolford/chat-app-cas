@@ -27,19 +27,15 @@ export class MessageService {
   }
 
   getPersonalMessages(firstId: string, secondId: string) {
-    /* return this.afs.collection<Message>(this.collectionName, ref => ref
-      .where('type', '==', 'personal')
-      .where('sender_id', 'in', [firstId, secondId])
-      .where('target_id', 'in', [firstId, secondId])
-      .orderBy('date', 'asc'))
-      .valueChanges(); */
-
      const first = this.afs.collection<Message>(this.collectionName, ref => ref
         .where('type', '==', 'personal')
         .where('sender_id', '==', firstId)
         .where('target_id', '==', secondId)
         .orderBy('date', 'asc'))
         .valueChanges();
+      if(firstId === secondId){
+        return first;
+      }
       const second = this.afs.collection<Message>(this.collectionName, ref => ref
         .where('type', '==', 'personal')
         .where('sender_id', '==', secondId)
