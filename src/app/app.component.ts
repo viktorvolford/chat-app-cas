@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { AuthService } from './shared/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'drugstore-app';
 
   loggedInUser?: string;
@@ -22,7 +22,7 @@ export class AppComponent {
   ){}
 
   ngOnInit(){
-    this.authService.isUserLoggedIn().subscribe({
+    this.authSubscription = this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
         if(user !== null) {
           this.loggedInUser = user?.uid;
@@ -36,6 +36,10 @@ export class AppComponent {
       localStorage.removeItem('user');
       this.authService.stopKeepAlive();
     }});
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   onToggleSideNav(sidenav : MatSidenav){

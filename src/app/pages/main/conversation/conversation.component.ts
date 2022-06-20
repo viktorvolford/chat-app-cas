@@ -17,6 +17,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   type?: string;
   id?: string;
+  loggedInUser: string = localStorage.getItem('user')?.slice(1,-1) as string;
 
   messages?: Array<Message>;
   users?: Array<User>;

@@ -1,8 +1,50 @@
 .main_container {
-    place-content: start center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
 }
 
-mat-card-footer {
+.mat-card {
+    display: inline-block;
+}
+
+.mat-card-footer {
     text-align: end;
     padding: 0 0.5rem;
+}
+
+.mat-card-header {
+    position: relative;
+}
+
+.options {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.message_container {
+    margin: 2rem 0 4rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
+
+.message {
+    margin: 1rem 0;
+}
+
+.my_message{
+    float: right;
+    background-color: aquamarine;
+}
+
+.other_message{
+    float: left;
+    background-color: bisque;
+}
+
+.target_name, .message_form {
+    text-align: center;
 }

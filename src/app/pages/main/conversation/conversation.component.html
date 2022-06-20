@@ -1,25 +1,28 @@
 <div class="main_container">
-    <h1>{{targetName}}</h1>
-    <div *ngFor="let message of messages; let i = index;">
-        <mat-card [ngStyle]="{'background-color' : i % 2 === 0 ? '#aee3fc' : '#579af7'}" class="mat-elevation-z4">
-            <mat-card-header>
-                <mat-icon mat-card-avatar>face</mat-icon>
-                <mat-card-title>
-                    {{ getName(message.sender_id) }}
-                </mat-card-title>
-                <mat-card-subtitle>
-                    {{ getUsername(message.sender_id) }}
-                </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                {{ message.content }}
-            </mat-card-content>
-            <mat-card-footer>
-                {{ message.date | date:'short'}}
-            </mat-card-footer>
-        </mat-card>
+    <h1 class="target_name">{{targetName}}</h1>
+    <div class="message_container">
+        <div class="message" *ngFor="let message of messages; let i = index;">
+            <mat-card [ngClass]="message.sender_id === loggedInUser ? 'my_message' : 'other_message'" class="mat-elevation-z4">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar>face</mat-icon>
+                    <mat-card-title>
+                        {{ getName(message.sender_id) }}
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        {{ getUsername(message.sender_id) }}
+                    </mat-card-subtitle>
+                    <mat-icon class="options" *ngIf="message.sender_id === loggedInUser">more_vert</mat-icon>
+                </mat-card-header>
+                <mat-card-content>
+                    {{ message.content }}
+                </mat-card-content>
+                <mat-card-footer>
+                    {{ message.date | date:'short'}}
+                </mat-card-footer>
+            </mat-card>          
+        </div>
     </div>
-    <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+    <form class="message_form" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <mat-form-field>
             <mat-label for="content">Message: </mat-label>
             <textarea matInput rows="10" cols="50" formControlName="content" placeholder="Say something..."></textarea>
