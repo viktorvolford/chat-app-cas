@@ -11,11 +11,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     ConversationComponent,
+    EditDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -28,7 +31,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatCardModule,
     MatIconModule,
     MatMenuModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ]
 })
 export class ConversationModule { }

@@ -8,6 +8,8 @@ import { Message } from '../../../shared/models/Message';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-conversation',
@@ -28,6 +30,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   messageLoadingSubscription?: Subscription;
   userLoadingSubscription?: Subscription;
   roomLoadingSubcription?: Subscription;
+  dialogSubscription?: Subscription;
 
   messageForm = this.formBuilder.group({
     id: '',
@@ -44,7 +47,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private roomService: RoomService,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -77,6 +81,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this.userLoadingSubscription?.unsubscribe();
     this.roomLoadingSubcription?.unsubscribe();
     this.queryParamSubscription?.unsubscribe();
+    this.dialogSubscription?.unsubscribe();
   }
 
   setTargetName() {
@@ -114,6 +119,21 @@ export class ConversationComponent implements OnInit, OnDestroy {
   delete(message: Message){
     this.messageService.delete(message.id).then(() => {
       this.snackBar.open('Your message has been deleted.', 'OK', {duration: 2000});
+    });
+  }
+
+  openEditDialog(message: Message){
+    const dialogRef = this.dialog.open(EditDialogComponent, {data: {message}});
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if(result && result !== message.content){
+        message.content = result; 
+        this.messageService.update(message).then(() => {
+          this.snackBar.open('Your message has been changed.', 'OK', {duration: 2000});
+        });
+      } else if(result === ''){
+        this.snackBar.open('You cannot enter an empty message.', 'OK', {duration: 2000});
+      }
     });
   }
 

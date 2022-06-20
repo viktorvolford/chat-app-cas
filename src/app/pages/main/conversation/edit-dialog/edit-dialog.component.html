@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Edit</h2>
+<mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Edited message:</mat-label>
+        <textarea matInput rows="10" cols="50" type="text" placeholder="Say something..." [(ngModel)]="editedText"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="editedText">Enter</button>
+    <button mat-button [mat-dialog-close]="null">Cancel</button>
+</mat-dialog-actions>
