@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    MatSnackBarModule
   ]
 })
 export class LoginModule { }

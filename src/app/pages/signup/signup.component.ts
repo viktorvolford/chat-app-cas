@@ -34,7 +34,7 @@ export class SignupComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar
     ) { }
 
   ngOnInit(): void {
@@ -69,7 +69,7 @@ export class SignupComponent implements OnInit {
         last_active: new Date().getTime()
       };
       this.userService.create(user).then(_ => {
-        this._snackBar.open('User has been created successfully!', 'Great', {duration: 2000});
+        this.snackBar.open('User has been created successfully!', 'Great', {duration: 2000});
         this.router.navigateByUrl('/main');
       }).catch(error => {
         console.log(error);
