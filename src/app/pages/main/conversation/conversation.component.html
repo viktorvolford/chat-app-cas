@@ -11,7 +11,17 @@
                     <mat-card-subtitle>
                         {{ getUsername(message.sender_id) }}
                     </mat-card-subtitle>
-                    <mat-icon class="options" *ngIf="message.sender_id === loggedInUser">more_vert</mat-icon>
+                    <mat-icon *ngIf="message.sender_id === loggedInUser" [matMenuTriggerFor]="menu" class="options" aria-label="Options">more_vert</mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="delete(message)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Delete</span>
+                        </button>
+                        <button mat-menu-item disabled>
+                          <mat-icon>edit</mat-icon>
+                          <span>Edit</span>
+                        </button>
+                      </mat-menu>
                 </mat-card-header>
                 <mat-card-content>
                     {{ message.content }}

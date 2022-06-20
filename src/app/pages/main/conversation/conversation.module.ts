@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonToggleModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatSnackBarModule
   ]
 })
 export class ConversationModule { }

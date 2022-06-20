@@ -7,6 +7,7 @@ import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-conversation',
@@ -42,7 +43,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private roomService: RoomService,
     private messageService: MessageService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -107,6 +109,12 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   getUsername(id: string){
     return this.users?.find(user => user.id === id)?.username;
+  }
+
+  delete(message: Message){
+    this.messageService.delete(message.id).then(() => {
+      this.snackBar.open('Your message has been deleted.', 'OK', {duration: 2000});
+    });
   }
 
 }
