@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { UserListComponent } from './user-list/user-list.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     FormsModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDividerModule
   ]
 })
 export class MainModule { }

@@ -9,13 +9,13 @@ $roomtab : rgb(242, 250, 253);
 
 .user_list_container {
     background-color: $usertab;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .room_list_container {
     background-color: $roomtab;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 h1 {
