@@ -3,7 +3,7 @@
 </span>
 
 <div class="main_container">
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="login('default')">
         <div>
             <h1>Log into your account</h1>
             <mat-form-field>
@@ -27,6 +27,12 @@
         <span>
             <span><button mat-raised-button color="primary" type="submit">Submit</button></span>
             <span><button  mat-raised-button color="primary" routerLink="/signup">You don't have an account yet?</button></span>
+        </span>
+        <span>
+            <span><button mat-raised-button color="primary" (click)="login('google')">Login with Google</button></span>
+        </span>
+        <span>
+            <span><button mat-raised-button color="primary" (click)="login('facebook')">Login with Facebook</button></span>
         </span>
     </form>
 </div>

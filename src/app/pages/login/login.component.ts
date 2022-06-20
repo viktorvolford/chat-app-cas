@@ -11,13 +11,12 @@ import { AuthService } from '../../shared/services/auth.service';
 export class LoginComponent implements OnInit {
 
     hide: boolean = true;
+    loading: boolean = false;
     
     loginForm = this.formBuilder.group({
         email: [''],
         password: ['']
     });
-  
-    loading: boolean = false;
     
     constructor(
         private router: Router, 
@@ -32,10 +31,9 @@ export class LoginComponent implements OnInit {
             this.addValidators();
         }
         
-        login(){
-            
+        login(loginType: string){
             this.loading = true;
-            this.authService.login(this.loginForm.get('email')?.value as string, this.loginForm.get('password')?.value as string)
+            this.getCredentialsForType(loginType)
                 .then(cred => {
                     console.log(cred);
                     this.router.navigateByUrl('/main');
@@ -44,6 +42,16 @@ export class LoginComponent implements OnInit {
                 }).finally(() => {
                     this.loading = false;
                 });
+        }
+
+        getCredentialsForType(loginType: string) : Promise<any> {
+            if(loginType === 'google'){
+                return this.authService.loginWithGoogle();
+            } else if (loginType === 'facebook') {
+                return this.authService.loginWithFacebook();
+            } else {
+                return this.authService.login(this.loginForm.get('email')?.value as string, this.loginForm.get('password')?.value as string);
+            }
         }
         
         addValidators() {
