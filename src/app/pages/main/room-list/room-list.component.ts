@@ -51,7 +51,7 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
     this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
       if(result === room.password){
         this.openChatroom(room.id);
-      } else if(result !== null){
+      } else if(result !== undefined && result !== null){
         this.snackBar.open('The entered password was incorrect!', 'OK', {duration: 2000});
       }
     });
