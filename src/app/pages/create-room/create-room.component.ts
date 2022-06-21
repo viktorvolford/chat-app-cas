@@ -62,7 +62,7 @@ export class CreateRoomComponent implements OnInit {
   createForm(model: any) {
     let formGroup = this.formBuilder.group(model);
     formGroup.get('name')?.addValidators([Validators.required]);
-    formGroup.get('password')?.addValidators([Validators.required, Validators.minLength(4)]);
+    formGroup.get('password')?.addValidators([Validators.minLength(4)]);
     return formGroup;
   }
 
@@ -79,7 +79,6 @@ export class CreateRoomComponent implements OnInit {
     event.chipInput!.clear();
 
     this.roomForm.get('member')?.setValue(null);
-    console.log(this.selectedMembers);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -90,7 +89,6 @@ export class CreateRoomComponent implements OnInit {
 
   removeChip(member: any){
     const index = this.selectedMembers.delete(member);
-    console.log(this.selectedMembers);
   }
 
   private _filter(value: string): string[] {
@@ -102,20 +100,21 @@ export class CreateRoomComponent implements OnInit {
   }
 
   onSubmit(){
-    this.roomService.create({
-            id: '',
-            name: this.roomForm.get('name')?.value as string,
-            members: Array.from(this.selectedMembers).map(user => user.id),
-            visibility: this.chosenGroup as string,
-            owner_id: localStorage.getItem('user'),
-            password: this.roomForm.get('password')?.value as string,
-          } as Room)
-    .then(() => { 
+    if(this.roomForm.valid){
+      this.roomService.create({
+        id: '',
+        name: this.roomForm.get('name')?.value as string,
+        members: Array.from(this.selectedMembers).map(user => user.id),
+        visibility: this.chosenGroup as string,
+        owner_id: localStorage.getItem('user'),
+        password: this.roomForm.get('password')?.value as string,
+      } as Room)
+      .then(() => { 
         this.snackBar.open('Room has been created successfully!', 'Great', {duration: 2000});
         this.router.navigateByUrl('/main');
-    }).catch(error => {
-      console.log(error);
-    });
+      }).catch(error => {
+        console.log(error);
+      });
+    }
   }
-
 }
