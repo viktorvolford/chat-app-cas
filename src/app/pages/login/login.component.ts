@@ -27,9 +27,6 @@ export class LoginComponent implements OnInit {
         ) { }
         
         ngOnInit(): void {     
-            if(localStorage.getItem('user')){
-                this.router.navigateByUrl('/main');
-            }
             this.addValidators();
         }
         
@@ -51,9 +48,7 @@ export class LoginComponent implements OnInit {
 
         getCredentialsForType(loginType: string) : Promise<any> {
             if(loginType === 'google'){
-                return this.authService.loginWithGoogle();
-            } else if (loginType === 'facebook') {
-                return this.authService.loginWithFacebook();
+                return this.authService.loginWithGoogle();;
             } else {
                 return this.authService.login(this.loginForm.get('email')?.value as string, this.loginForm.get('password')?.value as string);
             }

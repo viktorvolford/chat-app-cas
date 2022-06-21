@@ -53,7 +53,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit(){
     if(this.signUpForm.get('password')?.value !== this.signUpForm.get('rePassword')?.value){
-      window.alert('Nem egyeznek meg a megadott jelszavak!');
+      this.snackBar.open('Passwords must match.', 'OK', {duration: 2000});
       return;
     }
     this.authService.signup(this.signUpForm.get('email')?.value as string, this.signUpForm.get('password')?.value as string)

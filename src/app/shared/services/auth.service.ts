@@ -23,11 +23,6 @@ export class AuthService {
     return this.auth.signInWithPopup(googleAuthProvider);
   }
 
-  loginWithFacebook(){
-    const facebookAuthProvider = new firebase.auth.FacebookAuthProvider;
-    return this.auth.signInWithPopup(facebookAuthProvider);
-  }
-
   signup(email: string, password: string){
     return this.auth.createUserWithEmailAndPassword(email, password);
   }

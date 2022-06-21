@@ -4,7 +4,6 @@
     place-items: center;
 }
 
-.main_component div{
-    display: grid;
-    place-items: center;
+.main_container > * {
+    text-align: center;
 }
