@@ -6,7 +6,21 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            blahblah
+            <p *ngIf="room.visibility === 'public'">
+                This is a {{ room.visibility }} room. Anyone can join the conversation freely.
+            </p>
+            <p *ngIf="room.visibility === 'private'">
+                This is a {{ room.visibility }} room. <br>
+                The only ones that can see this conversations are: 
+                <span *ngFor="let member of room.members; last as last">
+                    <b>{{ getUsername(member) }}</b>
+                    <span *ngIf="!last">, </span>
+                </span>
+            </p>
+            <p *ngIf="room.visibility === 'protected'">
+                This is a {{ room.visibility }} room. <br>
+                You can only join the conversation if you enter the password given by the room owner.
+            </p>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button color="primary" type="button" (click)="chosenVisibility === 'protected' ? openDialog(room) : openChatroom(room.id)">
