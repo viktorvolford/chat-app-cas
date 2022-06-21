@@ -12,6 +12,10 @@
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="enteredPassword">Enter</button>
-    <button mat-button [mat-dialog-close]="null">Cancel</button>
+    <span>
+        <button mat-button [mat-dialog-close]="enteredPassword">Enter</button>
+    </span>
+    <span>
+        <button mat-button [mat-dialog-close]="null">Cancel</button>
+    </span>
 </mat-dialog-actions>
