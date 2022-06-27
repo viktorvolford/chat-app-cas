@@ -1,0 +1,58 @@
+{
+    "COMMON": {
+        "OK": "Oké",
+        "GREAT": "Remek",
+        "SUBMIT": "Beküld",
+        "CANCEL": "Mégsem",
+        "PUBLIC": "Publikus",
+        "PRIVATE": "Privát",
+        "PASSWORD_PROTECTED": "Jelszóval védett"
+    },
+    "MENU": {
+        "LOGIN": "Bejelentkezés",
+        "LOGOUT": "Kijelentkezés",
+        "REGISTER": "Regisztráció",
+        "CONVERSATIONS": "Beszélgetések",
+        "CREATE ROOM": "Új szoba"
+    },
+    "LOGIN_REGISTER": {
+        "LOGIN_BANNER": "Jelentkezz be a fiókodba",
+        "REGISTER_BANNER": "Hozz létre egy új fiókot",
+        "NOT_REGISTERED": "Még nincs fiókod?",
+        "GOOGLE": "Bejelentkezés Google-al",
+        "EMAIL": "E-mail cím",
+        "INVALID_EMAIL": "Helytelen e-mail címformátum!",
+        "USERNAME": "Felhasználónév",
+        "USERNAME_TAKEN": "Ez a felhasználónév már foglalt.",
+        "PASSWORD": "Jelszó",
+        "INVALID_PASSWORD": "A jelszó túl rövid!",
+        "PASSWORD_MISMATCH": "A jelszavaknak meg kell egyezniük.",
+        "FIRSTNAME": "Keresztnév",
+        "LASTNAME": "Vezetéknév",
+        "AUTH_FAILED": "Az azonosítás nem sikerült.",
+        "HAS_ACCOUNT": "Már van fiókom"
+    },
+    "MAIN": {
+        "ALL_USERS": "Az összes felhasználó",
+        "CHATROOMS": "Chatszobák",
+        "YOU": "Te",
+        "JOIN": "Csatlakozás",
+        "PUBLIC_DESC": "Ez egy publikus szoba. Ide bárki beléphet.",
+        "PRIVATE DESC": "Ez egy privát szoba. Csak számukra látható:",
+        "PASSWORD_PROTECTED_DESC": "Ez egy jelszóval védett szoba. Csak a szobajelszó megadása után csatlakozhatsz a beszélgetéshez.",
+        "ENTER_PASSWORD": "Add meg lent a {{value}} szoba jelszavát:"
+    },
+    "CREATE_ROOM": {
+        "BANNER": "Hozz létre egy új szobát",
+        "NAME": "Szoba neve:",
+        "MEMBERS": "Résztvevők",
+        "ADD_MEMBER": "Adj hozzá egy új résztvevőt...",
+        "PASSWORD": "Szoba jelszava:",
+        "CREATED": "A szoba sikeresen létre lett hozva!"
+    },
+    "CONVERSATION": {
+        "MESSAGE": "Üzenet:",
+        "SAY_SOMETHING": "Mondj valamit...",
+        "SEND": "Küldés"
+    }
+}
