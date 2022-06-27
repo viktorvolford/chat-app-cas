@@ -1,0 +1,58 @@
+{
+    "COMMON": {
+        "OK": "OK",
+        "GREAT": "Great",
+        "SUBMIT": "Submit",
+        "CANCEL": "Cancel",
+        "PUBLIC": "Public",
+        "PRIVATE": "Private",
+        "PASSWORD_PROTECTED": "Password protected"
+    },
+    "MENU": {
+        "LOGIN": "Login",
+        "LOGOUT": "Logout",
+        "REGISTER": "Register",
+        "CONVERSATIONS": "Conversations",
+        "CREATE ROOM": "Create room"
+    },
+    "LOGIN_REGISTER": {
+        "LOGIN_BANNER": "Log into your account",
+        "REGISTER_BANNER": "Register a new account",
+        "NOT_REGISTERED": "You don't have an account yet?",
+        "GOOGLE": "Login with Google",
+        "EMAIL": "E-mail address",
+        "INVALID_EMAIL": "Invalid e-mail format!",
+        "USERNAME": "Username",
+        "USERNAME_TAKEN": "This username has already been taken.",
+        "PASSWORD": "Password",
+        "INVALID_PASSWORD": "Password is too short!",
+        "PASSWORD_MISMATCH": "Passwords must match.",
+        "FIRSTNAME": "First name",
+        "LASTNAME": "Last name",
+        "AUTH_FAILED": "Authentication has failed.",
+        "HAS_ACCOUNT": "I already have an account"
+    },
+    "MAIN": {
+        "ALL_USERS": "All users",
+        "CHATROOMS": "Chatrooms",
+        "YOU": "You",
+        "JOIN": "Join room",
+        "PUBLIC_DESC": "This is a public room. Anyone can join the conversation freely.",
+        "PRIVATE DESC": "This is a private room. The only ones that can see this conversations are:",
+        "PASSWORD_PROTECTED_DESC": "This is a protected room. You can only join the conversation if you enter the password given by the room owner.",
+        "ENTER_PASSWORD": "Enter {{value}}'s secret key below:"
+    },
+    "CREATE_ROOM": {
+        "BANNER": "Create a new chatroom",
+        "NAME": "Room name:",
+        "MEMBERS": "Members",
+        "ADD_MEMBER": "Add a new member...",
+        "PASSWORD": "Room password:",
+        "CREATED": "Room has been created successfully!"
+    },
+    "CONVERSATION": {
+        "MESSAGE": "Message:",
+        "SAY_SOMETHING": "Say something...",
+        "SEND": "Send"
+    }
+}

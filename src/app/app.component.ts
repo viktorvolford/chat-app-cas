@@ -3,6 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './shared/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ){}
+    private router: Router,
+    translate: TranslateService
+  ){
+    translate.addLangs(['en', 'hu']);
+    translate.setDefaultLang('en');
+
+    const browserLang = translate.getBrowserLang() as string;
+    translate.use(browserLang.match(/en|hu/) ? browserLang : 'en');
+  }
 
   ngOnInit(){
     this.authSubscription = this.authService.isUserLoggedIn().subscribe({
