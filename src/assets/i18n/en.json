@@ -34,7 +34,8 @@
         "FIRSTNAME": "First name",
         "LASTNAME": "Last name",
         "AUTH_FAILED": "Authentication has failed.",
-        "HAS_ACCOUNT": "I already have an account"
+        "HAS_ACCOUNT": "I already have an account",
+        "CREATED": "User has been created successfully!"
     },
     "MAIN": {
         "ALL_USERS": "All users",
@@ -59,6 +60,9 @@
         "MESSAGE": "Message:",
         "SAY_SOMETHING": "Say something...",
         "SEND": "Send",
-        "EDITED_MESSAGE": "Edited message"
+        "EDITED_MESSAGE": "Edited message",
+        "DELETED": "The message has been deleted successfully.",
+        "MODIFIED": "The message has been modified successfully.",
+        "EMPTY": "You cannot enter an empty message."
     }
 }

@@ -101,7 +101,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
       this.messageForm.get('date')?.setValue(new Date().getTime());
 
       this.messageService.create(this.messageForm.value as Message).then(_ => {
-        console.log('The message has been sent successfully!')
         this.messageForm.get('content')?.setValue('');
       }).catch(error => {
         console.error(error);
@@ -120,7 +119,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   delete(message: Message){
     this.messageService.delete(message.id).then(() => {
-      this.snackBar.open('Your message has been deleted.', 'OK', {duration: 2000});
+      this.snackBar.open(
+        this.translate.instant('CONVERSATION.DELETED'), 
+        this.translate.instant('COMMON.OK'), 
+        {duration: 2000});
     });
   }
 
@@ -131,10 +133,16 @@ export class ConversationComponent implements OnInit, OnDestroy {
       if(result && result !== message.content){
         message.content = result; 
         this.messageService.update(message).then(() => {
-          this.snackBar.open('Your message has been changed.', 'OK', {duration: 2000});
+          this.snackBar.open(
+            this.translate.instant('CONVERSATION.MODIFIED'), 
+            this.translate.instant('COMMON.OK'), 
+            {duration: 2000});
         });
       } else if(result === ''){
-        this.snackBar.open('You cannot enter an empty message.', 'OK', {duration: 2000});
+        this.snackBar.open(
+          this.translate.instant('CONVERSATION.EMPTY'), 
+          this.translate.instant('COMMON.OK'), 
+          {duration: 2000});
       }
     });
   }

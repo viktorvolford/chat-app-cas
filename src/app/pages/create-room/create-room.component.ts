@@ -112,7 +112,10 @@ export class CreateRoomComponent implements OnInit {
         password: this.roomForm.get('password')?.value as string,
       } as Room)
       .then(() => { 
-        this.snackBar.open('Room has been created successfully!', 'Great', {duration: 2000});
+        this.snackBar.open(
+          this.translate.instant('CREATE_ROOM.CREATED'), 
+          this.translate.instant('COMMON.GREAT'), 
+          {duration: 2000});
         this.router.navigateByUrl('/main');
       }).catch(error => {
         console.log(error);

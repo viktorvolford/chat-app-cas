@@ -34,7 +34,8 @@
         "FIRSTNAME": "Keresztnév",
         "LASTNAME": "Vezetéknév",
         "AUTH_FAILED": "Az azonosítás nem sikerült.",
-        "HAS_ACCOUNT": "Már van fiókom"
+        "HAS_ACCOUNT": "Már van fiókom",
+        "CREATED": "A felhasználó sikeresen létre lett hozva!"
     },
     "MAIN": {
         "ALL_USERS": "Az összes felhasználó",
@@ -59,6 +60,9 @@
         "MESSAGE": "Üzenet:",
         "SAY_SOMETHING": "Mondj valamit...",
         "SEND": "Küldés",
-        "EDITED_MESSAGE": "Módosított szöveg"
+        "EDITED_MESSAGE": "Módosított szöveg",
+        "DELETED": "Az üzenet törlése sikeres.",
+        "MODIFIED": "Az üzenet módosítása sikeres.",
+        "EMPTY": "Nem küldhetsz üres üzenetet!"
     }
 }
