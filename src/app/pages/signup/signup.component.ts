@@ -7,6 +7,7 @@ import { UserService } from '../../shared/services/user.service';
 
 import { User } from '../../shared/models/User'
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-signup',
@@ -34,7 +35,8 @@ export class SignupComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService
     ) { }
 
   ngOnInit(): void {

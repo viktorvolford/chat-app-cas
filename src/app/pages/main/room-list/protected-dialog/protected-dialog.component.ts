@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-protected-dialog',
@@ -13,7 +14,8 @@ export class ProtectedDialogComponent implements OnInit {
   enteredPassword: string = '';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public translate: TranslateService
     ) { }
 
   ngOnInit(): void {}

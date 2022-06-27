@@ -15,11 +15,11 @@
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="delete(message)">
                           <mat-icon>delete</mat-icon>
-                          <span>Delete</span>
+                          <span>{{'COMMON.DELETE' | translate}}</span>
                         </button>
                         <button mat-menu-item (click)="openEditDialog(message)">
                           <mat-icon>edit</mat-icon>
-                          <span>Edit</span>
+                          <span>{{'COMMON.EDIT' | translate}}</span>
                         </button>
                       </mat-menu>
                 </mat-card-header>
@@ -34,13 +34,13 @@
     </div>
     <form class="message_form" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <mat-form-field>
-            <mat-label for="content">Message: </mat-label>
-            <textarea matInput rows="10" cols="50" formControlName="content" placeholder="Say something..."></textarea>
+            <mat-label for="content">{{'CONVERSATION.MESSAGE' | translate}}</mat-label>
+            <textarea matInput rows="10" cols="50" formControlName="content" [placeholder]="'CONVERSATION.SAY_SOMETHING' | translate"></textarea>
         </mat-form-field>
     
         <div class="break"></div>
         <span>
-            <span><button mat-raised-button color="primary" type="submit">Send</button></span>
+            <span><button mat-raised-button color="primary" type="submit">{{'CONVERSATION.SEND' | translate}}</button></span>
         </span>
     </form>
 </div>

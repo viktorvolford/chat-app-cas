@@ -11,6 +11,7 @@ import {map, startWith} from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-room',
@@ -42,7 +43,8 @@ export class CreateRoomComponent implements OnInit {
     private userService: UserService,
     private roomService: RoomService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public translate: TranslateService
     ) {}
 
   ngOnInit(): void {

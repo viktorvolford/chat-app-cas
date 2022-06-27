@@ -1,23 +1,23 @@
 <div class="main_container">
     <div class="div-flex">
         <form [formGroup]="roomForm" (ngSubmit)="onSubmit()">
-            <h1>Create a new chatroom</h1>
+            <h1>{{ 'CREATE_ROOM.BANNER' | translate }}</h1>
             <mat-form-field>
-                <mat-label for="name">Room name:</mat-label>
+                <mat-label for="name">{{ 'CREATE_ROOM.NAME' | translate }}</mat-label>
                 <input matInput type="text" formControlName="name"/>
             </mat-form-field>
             <mat-radio-group [(ngModel)]="chosenGroup" [ngModelOptions]="{standalone: true}" aria-label="Accessibility">
-                <mat-radio-button value="public" checked="true">Public</mat-radio-button>
-                <mat-radio-button value="private">Private</mat-radio-button>
-                <mat-radio-button value="protected">Password protected</mat-radio-button>
+                <mat-radio-button value="public" checked="true">{{ 'COMMON.PUBLIC' | translate }}</mat-radio-button>
+                <mat-radio-button value="private">{{ 'COMMON.PRIVATE' | translate }}</mat-radio-button>
+                <mat-radio-button value="protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-radio-button>
             </mat-radio-group>
             <mat-form-field *ngIf="chosenGroup === 'protected'">
-                <mat-label for="name">Room password:</mat-label>
+                <mat-label for="name">{{ 'CREATE_ROOM.PASSWORD' | translate }}</mat-label>
                 <input matInput type="password" formControlName="password">
             </mat-form-field>
 
             <mat-form-field *ngIf="chosenGroup === 'private'" class="example-chip-list" appearance="fill">
-                <mat-label>Members:</mat-label>
+                <mat-label>{{ 'CREATE_ROOM.MEMBERS' | translate }}</mat-label>
                 <mat-chip-list #chipList aria-label="Members">
                   <mat-chip *ngFor="let user of selectedMembers" (removed)="removeChip(user)">
                     {{user.username}}
@@ -26,7 +26,7 @@
                     </button>
                   </mat-chip>
                   <input
-                    placeholder="Add a new member..."
+                    [placeholder]="'CREATE_ROOM.ADD_MEMBER' | translate"
                     #memberInput
                     formControlName="member"
                     [matAutocomplete]="auto"
@@ -42,7 +42,7 @@
               </mat-form-field>
 
             <span>
-                <span><button mat-raised-button color="primary" type="submit" class="submit">Submit</button></span>
+                <span><button mat-raised-button color="primary" type="submit" class="submit">{{ 'COMMON.SUBMIT' | translate }}</button></span>
             </span>
         </form>
     </div>

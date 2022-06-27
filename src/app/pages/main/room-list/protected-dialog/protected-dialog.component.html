@@ -1,10 +1,8 @@
-<h2 mat-dialog-title>Password protection</h2>
+<h2 mat-dialog-title>{{ 'MAIN.PASSWORD_PROTECTION' | translate }}</h2>
 <mat-dialog-content>
-    <p>
-        Enter <b>{{data.roomName}}</b>'s secret key below:
-    </p>
+    <p [innerHTML]="'MAIN.ENTER_PASSWORD' | translate:{value: data.roomName}"></p>
     <mat-form-field appearance="fill">
-        <mat-label>Password:</mat-label>
+        <mat-label>{{'COMMON.PASSWORD' | translate }}:</mat-label>
         <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="enteredPassword">
         <mat-icon-button class="hide_button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -13,9 +11,9 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <span>
-        <button mat-button [mat-dialog-close]="enteredPassword">Enter</button>
+        <button mat-button [mat-dialog-close]="enteredPassword">{{ 'COMMON.ENTER' | translate }}</button>
     </span>
     <span>
-        <button mat-button [mat-dialog-close]="null">Cancel</button>
+        <button mat-button [mat-dialog-close]="null">{{ 'COMMON.CANCEL' | translate }}</button>
     </span>
 </mat-dialog-actions>

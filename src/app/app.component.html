@@ -14,11 +14,16 @@
             </div>
             <div class="navbar">
                 <ul class="navigation-items">
-                    <li *ngIf="loggedInUser"><a routerLink="/login" (click)="logout()">Logout</a></li>
-                    <li *ngIf="!(loggedInUser)"><a routerLink="/login">Login</a></li>
-                    <li *ngIf="!(loggedInUser)"><a routerLink="/signup">Register</a></li>
-                    <li *ngIf="loggedInUser"><a routerLink="/main">Conversations</a></li>
-                    <li *ngIf="loggedInUser"><a routerLink="/create-room">Create room</a></li>
+                    <li *ngIf="loggedInUser"><a routerLink="/login" (click)="logout()">{{ 'MENU.LOGOUT' | translate }}</a></li>
+                    <li *ngIf="!(loggedInUser)"><a routerLink="/login">{{ 'MENU.LOGIN' | translate }}</a></li>
+                    <li *ngIf="!(loggedInUser)"><a routerLink="/signup">{{ 'MENU.REGISTER' | translate }}</a></li>
+                    <li *ngIf="loggedInUser"><a routerLink="/main">{{ 'MENU.CONVERSATIONS' | translate }}</a></li>
+                    <li *ngIf="loggedInUser"><a routerLink="/create-room">{{ 'MENU.CREATE_ROOM' | translate }}</a></li>
+                    <li>
+                        <select #langSelect (change)="translate.use(langSelect.value)">
+                            <option *ngFor="let lang of translate.getLangs()" [value]="lang" [selected]="lang === translate.currentLang">{{ lang }}</option>
+                          </select>
+                    </li>
                 </ul>
             </div>
         </mat-toolbar>

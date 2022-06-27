@@ -10,6 +10,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-conversation',
@@ -48,7 +49,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public translate: TranslateService
   ) { }
 
   ngOnInit(): void {

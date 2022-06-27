@@ -1,9 +1,9 @@
-<h1>All users</h1>
+<h1>{{ 'MAIN.ALL_USERS' | translate }}</h1>
 <div *ngFor="let user of users; first as first" class="user" (click)="openConversation(user.id)">
     <span class="username">
         <div>
             <b>{{user.username}}</b>
-            <span class="you" *ngIf="user.id === loggedInUser">(You)</span> 
+            <span class="you" *ngIf="user.id === loggedInUser">({{ 'MAIN.YOU' | translate }})</span> 
         </div>
     </span>
     <span class="activity-indicator">

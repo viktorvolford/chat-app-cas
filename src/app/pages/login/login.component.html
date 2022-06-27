@@ -5,31 +5,31 @@
 <div class="main_container">
     <form [formGroup]="loginForm" (ngSubmit)="login('default')">
         <div>
-            <h1>Log into your account</h1>
+            <h1>{{'LOGIN_REGISTER.LOGIN_BANNER' | translate}}</h1>
             <mat-form-field>
-                <mat-label for="email">E-mail address:</mat-label>
+                <mat-label for="email">{{'COMMON.EMAIL' | translate}}</mat-label>
                 <input matInput type="text" formControlName="email">
                 <mat-error *ngIf="loginForm.get('email')?.invalid">
-                    Invalid e-mail format!
+                    {{'LOGIN_REGISTER.INVALID_EMAIL' | translate}}
                 </mat-error>
             </mat-form-field>
             <mat-form-field>
-                <mat-label for="password">Password:</mat-label>
+                <mat-label for="password">{{'COMMON.PASSWORD' | translate}}</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
                 <mat-icon-button class="hide_button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-icon-button>
                 <mat-error *ngIf="loginForm.get('password')?.invalid">
-                    Password is too short!
+                    {{'LOGIN_REGISTER.INVALID_PASSWORD' | translate}}
                 </mat-error>
             </mat-form-field>
         </div>
         <span>
-            <span><button mat-raised-button color="primary" type="submit">Submit</button></span>
-            <span><button  mat-raised-button color="primary" type="button" routerLink="/signup">You don't have an account yet?</button></span>
+            <span><button mat-raised-button color="primary" type="submit">{{'COMMON.SUBMIT' | translate}}</button></span>
+            <span><button  mat-raised-button color="primary" type="button" routerLink="/signup">{{'LOGIN_REGISTER.NOT_REGISTERED' | translate}}</button></span>
         </span>
         <span>
-            <span><button mat-raised-button color="primary" (click)="login('google')">Login with Google</button></span>
+            <span><button mat-raised-button color="primary" (click)="login('google')">{{'LOGIN_REGISTER.GOOGLE' | translate}}</button></span>
         </span>
     </form>
 </div>

@@ -8,6 +8,7 @@ import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/models/User';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-room-list',
@@ -30,7 +31,8 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    public translate: TranslateService
     ) { }
 
   ngOnChanges(): void {

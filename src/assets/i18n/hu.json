@@ -3,29 +3,33 @@
         "OK": "Oké",
         "GREAT": "Remek",
         "SUBMIT": "Beküld",
+        "ENTER": "Belép",
         "CANCEL": "Mégsem",
+        "PASSWORD": "Jelszó",
+        "EMAIL": "E-mail cím",
         "PUBLIC": "Publikus",
         "PRIVATE": "Privát",
-        "PASSWORD_PROTECTED": "Jelszóval védett"
+        "PASSWORD_PROTECTED": "Jelszóval védett",
+        "DELETE": "Törlés",
+        "EDIT": "Módosítás"
     },
     "MENU": {
         "LOGIN": "Bejelentkezés",
         "LOGOUT": "Kijelentkezés",
         "REGISTER": "Regisztráció",
         "CONVERSATIONS": "Beszélgetések",
-        "CREATE ROOM": "Új szoba"
+        "CREATE_ROOM": "Új szoba"
     },
     "LOGIN_REGISTER": {
         "LOGIN_BANNER": "Jelentkezz be a fiókodba",
         "REGISTER_BANNER": "Hozz létre egy új fiókot",
         "NOT_REGISTERED": "Még nincs fiókod?",
         "GOOGLE": "Bejelentkezés Google-al",
-        "EMAIL": "E-mail cím",
         "INVALID_EMAIL": "Helytelen e-mail címformátum!",
         "USERNAME": "Felhasználónév",
-        "USERNAME_TAKEN": "Ez a felhasználónév már foglalt.",
-        "PASSWORD": "Jelszó",
+        "USERNAME_TAKEN": "Ez a felhasználónév már foglalt.",     
         "INVALID_PASSWORD": "A jelszó túl rövid!",
+        "REPASSWORD": "Jelszó ismétlése",
         "PASSWORD_MISMATCH": "A jelszavaknak meg kell egyezniük.",
         "FIRSTNAME": "Keresztnév",
         "LASTNAME": "Vezetéknév",
@@ -37,10 +41,11 @@
         "CHATROOMS": "Chatszobák",
         "YOU": "Te",
         "JOIN": "Csatlakozás",
-        "PUBLIC_DESC": "Ez egy publikus szoba. Ide bárki beléphet.",
-        "PRIVATE DESC": "Ez egy privát szoba. Csak számukra látható:",
-        "PASSWORD_PROTECTED_DESC": "Ez egy jelszóval védett szoba. Csak a szobajelszó megadása után csatlakozhatsz a beszélgetéshez.",
-        "ENTER_PASSWORD": "Add meg lent a {{value}} szoba jelszavát:"
+        "PUBLIC_DESC": "Ez egy publikus szoba.<br>Ide bárki beléphet.",
+        "PRIVATE_DESC": "Ez egy privát szoba.<br>Csak számukra látható: ",
+        "PASSWORD_PROTECTED_DESC": "Ez egy jelszóval védett szoba.<br>Csak a szobajelszó megadása után csatlakozhatsz a beszélgetéshez.",
+        "PASSWORD_PROTECTION": "Jelszó védelem",
+        "ENTER_PASSWORD": "Add meg lent a(z) <b>{{value}}</b> szoba jelszavát:"
     },
     "CREATE_ROOM": {
         "BANNER": "Hozz létre egy új szobát",
@@ -53,6 +58,7 @@
     "CONVERSATION": {
         "MESSAGE": "Üzenet:",
         "SAY_SOMETHING": "Mondj valamit...",
-        "SEND": "Küldés"
+        "SEND": "Küldés",
+        "EDITED_MESSAGE": "Módosított szöveg"
     }
 }

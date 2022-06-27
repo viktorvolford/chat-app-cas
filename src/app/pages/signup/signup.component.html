@@ -1,24 +1,24 @@
 <div class="main_container">
     <div class="div-flex">
         <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-            <h1>Register a new account</h1>
+            <h1>{{'LOGIN_REGISTER.REGISTER_BANNER' | translate}}</h1>
             <mat-form-field>
-                <mat-label for="email">E-mail address:</mat-label>
+                <mat-label for="email">{{'COMMON.EMAIL' | translate}}</mat-label>
                 <input matInput type="text" formControlName="email"/>
             </mat-form-field>
             <mat-form-field>
-                <mat-label for="email">Username:</mat-label>
+                <mat-label for="email">{{'LOGIN_REGISTER.USERNAME' | translate}}</mat-label>
                 <input matInput type="text" formControlName="username"/>
             </mat-form-field>
             <mat-form-field>
-                <mat-label for="password">Password:</mat-label>
+                <mat-label for="password">{{'COMMON.PASSWORD' | translate}}</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"/>
                 <mat-icon-button class="hide_button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-icon-button>
             </mat-form-field>
             <mat-form-field>
-                <mat-label for="password">Password confirmation:</mat-label>
+                <mat-label for="password">{{'LOGIN_REGISTER.REPASSWORD' | translate}}</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" formControlName="rePassword"/>
                 <mat-icon-button class="hide_button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -26,17 +26,17 @@
             </mat-form-field>
             <div formGroupName="name">
                 <mat-form-field>
-                    <mat-label for="firstname">First name:</mat-label>
+                    <mat-label for="firstname">{{'LOGIN_REGISTER.FIRSTNAME' | translate}}</mat-label>
                     <input matInput type="text" formControlName="firstname"/>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label for="lastname">Last name:</mat-label>
+                    <mat-label for="lastname">{{'LOGIN_REGISTER.LASTNAME' | translate}}</mat-label>
                     <input matInput type="text" formControlName="lastname"/>
                 </mat-form-field>
             </div>
             <span>
-                <span><button mat-raised-button color="primary" type="submit">Submit</button></span>
-                <span><button mat-raised-button color="primary" type="reset" (click)="goBack()">I already have an account</button></span>
+                <span><button mat-raised-button color="primary" type="submit">{{'COMMON.SUBMIT' | translate}}</button></span>
+                <span><button mat-raised-button color="primary" type="reset" (click)="goBack()">{{'LOGIN_REGISTER.HAS_ACCOUNT' | translate}}</button></span>
             </span>
         </form>
     </div>

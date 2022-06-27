@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    translate: TranslateService
+    public translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
     translate.setDefaultLang('en');
