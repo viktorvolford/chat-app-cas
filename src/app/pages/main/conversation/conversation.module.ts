@@ -22,8 +22,6 @@ import { FullNamePipe } from '../../../shared/pipes/full-name.pipe';
   declarations: [
     ConversationComponent,
     EditDialogComponent,
-    UsernamePipe,
-    FullNamePipe
   ],
   imports: [
     CommonModule,
@@ -39,7 +37,9 @@ import { FullNamePipe } from '../../../shared/pipes/full-name.pipe';
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
-    HttpClientModule
+    HttpClientModule,
+    UsernamePipe,
+    FullNamePipe
   ]
 })
 export class ConversationModule { }
