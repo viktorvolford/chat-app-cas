@@ -6,10 +6,10 @@
                 <mat-card-header>
                     <mat-icon mat-card-avatar>face</mat-icon>
                     <mat-card-title>
-                        {{ getName(message.sender_id) }}
+                        {{ message.sender_id | fullName:users }}
                     </mat-card-title>
                     <mat-card-subtitle>
-                        {{ getUsername(message.sender_id) }}
+                        {{ message.sender_id | username:users }}
                     </mat-card-subtitle>
                     <mat-icon *ngIf="message.sender_id === loggedInUser" [matMenuTriggerFor]="menu" class="options" aria-label="Options">more_vert</mat-icon>
                     <mat-menu #menu="matMenu">

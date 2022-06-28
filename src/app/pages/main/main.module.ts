@@ -18,13 +18,15 @@ import { UserListComponent } from './user-list/user-list.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { UsernamePipe } from '../../shared/pipes/username.pipe';
 
 @NgModule({
   declarations: [
     MainComponent,
     RoomListComponent,
     ProtectedDialogComponent,
-    UserListComponent
+    UserListComponent,
+    UsernamePipe
   ],
   imports: [
     CommonModule,

@@ -15,11 +15,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { UsernamePipe } from '../../../shared/pipes/username.pipe';
+import { FullNamePipe } from '../../../shared/pipes/full-name.pipe';
 
 @NgModule({
   declarations: [
     ConversationComponent,
     EditDialogComponent,
+    UsernamePipe,
+    FullNamePipe
   ],
   imports: [
     CommonModule,

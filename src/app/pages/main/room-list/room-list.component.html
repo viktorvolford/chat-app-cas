@@ -10,7 +10,7 @@
             <p *ngIf="room.visibility === 'private'">
                 <span [innerHTML]="'MAIN.PRIVATE_DESC' | translate"></span>
                 <span *ngFor="let member of room.members; last as last">
-                    <b>{{ getUsername(member) }}</b>
+                    <b>{{ member | username:users }}</b>
                     <span *ngIf="!last">, </span>
                 </span>
             </p>

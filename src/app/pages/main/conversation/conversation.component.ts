@@ -23,8 +23,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
   id?: string;
   loggedInUser: string = localStorage.getItem('user')?.slice(1,-1) as string;
 
-  messages?: Array<Message>;
-  users?: Array<User>;
+  messages: Array<Message> = new Array<Message>();
+  users: Array<User> = new Array<User>();
   targetName: string = '';
 
   queryParamSubscription?: Subscription;
@@ -88,7 +88,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   setTargetName() {
     if(this.type === 'personal'){
-      const targetPerson = this.users?.find(user => user.id === this.id);
+      const targetPerson = this.users.find(user => user.id === this.id);
       this.targetName = targetPerson?.name.firstname + ' ' + targetPerson?.name.lastname;
     } else {
       this.roomLoadingSubcription = this.roomService.getById(this.id as string).subscribe(result => this.targetName = result?.name as string);
@@ -106,15 +106,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
         console.error(error);
       });
     }
-  }
-
-  getName(id: string){
-    const targetPerson = this.users?.find(user => user.id === id);
-    return targetPerson?.name.firstname + ' ' + targetPerson?.name.lastname;
-  }
-
-  getUsername(id: string){
-    return this.users?.find(user => user.id === id)?.username;
   }
 
   delete(message: Message){

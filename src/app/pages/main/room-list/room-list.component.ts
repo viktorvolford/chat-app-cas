@@ -65,9 +65,4 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
-
-  getUsername(id: string){
-    return this.users?.find(user => user.id === id)?.username;
-  }
-
 }
