@@ -19,4 +19,12 @@
         <mat-icon>add_circle</mat-icon>
         <span>Create room</span>
     </a>
+    <a mat-list-item>
+        <mat-icon>language</mat-icon>
+        <mat-select [(ngModel)]="selectedLang" (selectionChange)="switchLanguage(selectedLang)">
+            <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+              {{lang}}
+            </mat-option>
+        </mat-select>
+    </a>
 </mat-nav-list>

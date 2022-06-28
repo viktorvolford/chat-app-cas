@@ -11,7 +11,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
   title = 'drugstore-app';
+  selectedLang: string = '';
 
   loggedInUser?: string;
 
@@ -30,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(){
+    this.selectedLang = this.translate.currentLang;
     this.authSubscription = this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
         if(user !== null) {
@@ -58,6 +61,11 @@ export class AppComponent implements OnInit, OnDestroy {
     if (event === true){
       sidenav.close();
     }
+  }
+
+  switchLanguage(value: string){
+    this.selectedLang = value;
+    this.translate.use(value);
   }
 
   logout(_?: boolean){
