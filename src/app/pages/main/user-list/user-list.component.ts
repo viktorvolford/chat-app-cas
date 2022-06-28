@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { UserService } from '../../../shared/services/user.service';
@@ -20,7 +19,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private router: Router,
-    public translate: TranslateService
   ) { }
 
   ngOnInit(): void {

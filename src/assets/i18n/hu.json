@@ -64,5 +64,9 @@
         "DELETED": "Az üzenet törlése sikeres.",
         "MODIFIED": "Az üzenet módosítása sikeres.",
         "EMPTY": "Nem küldhetsz üres üzenetet!"
+    },
+    "NOT_FOUND": {
+        "BANNER": "Nem talált",
+        "DESC": "Nem található ilyen oldal."
     }
 }

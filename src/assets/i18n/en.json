@@ -64,5 +64,9 @@
         "DELETED": "The message has been deleted successfully.",
         "MODIFIED": "The message has been modified successfully.",
         "EMPTY": "You cannot enter an empty message."
+    },
+    "NOT_FOUND": {
+        "BANNER": "Not found",
+        "DESC": "This page cannot be found."
     }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main',
@@ -10,9 +9,7 @@ export class MainComponent implements OnInit {
 
   chosenVisibility: string = 'public';
 
-  constructor(
-    public translate: TranslateService
-    ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

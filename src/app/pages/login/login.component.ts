@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserCredential } from '@angular/fire/auth';
 import { UserService } from '../../shared/services/user.service';
 import { User } from '../../shared/models/User';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -28,8 +27,7 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private authService: AuthService,
         private userService: UserService,
-        private snackBar: MatSnackBar,
-        public translate: TranslateService
+        private snackBar: MatSnackBar
         ) { }
         
     ngOnInit(): void {     
