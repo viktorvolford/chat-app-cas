@@ -4,7 +4,7 @@ $roomtab : rgb(242, 250, 253);
 .main_container {
     padding: 0;
     grid-template-columns: 1fr 3fr;
-    place-content: start center;
+    place-content: flex-start center;
 }
 
 .user_list_container {
