@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
@@ -16,7 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-create-room',
   templateUrl: './create-room.component.html',
-  styleUrls: ['./create-room.component.scss']
+  styleUrls: ['./create-room.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateRoomComponent implements OnInit {
 

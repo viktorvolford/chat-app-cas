@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-protected-dialog',
   templateUrl: './protected-dialog.component.html',
-  styleUrls: ['./protected-dialog.component.scss']
+  styleUrls: ['./protected-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProtectedDialogComponent implements OnInit {
 
