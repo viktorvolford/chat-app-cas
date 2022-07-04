@@ -30,7 +30,7 @@ export class RoomService {
       return this.getPublicRooms();
     }
     else if(type === 'private'){
-      const uid = (localStorage.getItem('user') as string).slice(1, -1);
+      const uid = localStorage.getItem('user') as string;
       return this.getPrivateRooms(uid);
     }
     else{

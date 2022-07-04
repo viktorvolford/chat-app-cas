@@ -37,8 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
       next: (user) => {
         if(user !== null) {
           this.loggedInUser = user?.uid;
-          console.log(user);
-          localStorage.setItem('user', JSON.stringify(this.loggedInUser));
+          localStorage.setItem('user', JSON.stringify(this.loggedInUser).slice(1, -1));
           this.authService.startKeepAlive();
         }
     }, 

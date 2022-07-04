@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.users$ = this.userService.getAll();
-    this.loggedInUser = localStorage.getItem('user')?.slice(1,-1) as string;
+    this.loggedInUser = localStorage.getItem('user') as string;
   }
 
   openConversation(id: string){

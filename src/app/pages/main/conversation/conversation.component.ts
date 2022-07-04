@@ -21,7 +21,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   type?: string;
   id?: string;
-  loggedInUser: string = localStorage.getItem('user')?.slice(1,-1) as string;
+  loggedInUser: string = localStorage.getItem('user') as string;
 
   messages: Array<Message> = new Array<Message>();
   users: Array<User> = new Array<User>();
@@ -36,7 +36,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   messageForm = this.formBuilder.group({
     id: '',
     content: '',
-    sender_id: localStorage.getItem('user')?.slice(1,-1),
+    sender_id: this.loggedInUser,
     target_id: '',
     type: '',
     date: new Date().getTime()
@@ -67,7 +67,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
         });
 
         if(this.type === 'personal'){
-          this.messageLoadingSubscription = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string).slice(1,-1)).subscribe(result => {
+          this.messageLoadingSubscription = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string)).subscribe(result => {
             this.messages = result;
           })
         } else {
