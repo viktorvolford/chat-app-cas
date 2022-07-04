@@ -37,7 +37,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   isOnline(user: User): boolean {
-    return new Date().getTime() - user.last_active > 50000 ? false : true;
+    return new Date().getTime() - user.last_active > 60001 ? false : true;
   }
 
 }

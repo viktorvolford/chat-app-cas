@@ -42,7 +42,7 @@ export class AuthService {
     this.userService.updateTime(user as string, new Date().getTime());
     this.keepAlive = setInterval(() => {
       this.userService.updateTime(user as string, new Date().getTime());
-    }, 30000);
+    }, 60000);
   }
 
   stopKeepAlive(){
