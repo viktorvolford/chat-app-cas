@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
@@ -11,7 +11,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
-import { Room } from '../../../shared/models/Room';
 
 @Component({
   selector: 'app-conversation',
@@ -25,8 +24,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
   loggedInUser: string = localStorage.getItem('user') as string;
 
   messages$?: Observable<Message[]>;
-  users$?: Observable<User[]>;
-  room$?: Observable<Room | undefined>;
+  users$: Observable<User[]>;
+  roomName$?: Observable<string | undefined>;
 
   queryParamSubscription?: Subscription;
   dialogSubscription?: Subscription;
@@ -49,7 +48,9 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     public translate: TranslateService
-  ) { }
+  ) { 
+    this.users$ = this.userService.getAll();
+  }
 
   ngOnInit(): void {
     this.queryParamSubscription = this.route.queryParamMap.subscribe(result => {
@@ -58,13 +59,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
         this.messageForm.get('type')?.setValue(this.type);
         this.messageForm.get('target_id')?.setValue(this.id);
-        
-        this.users$ = this.userService.getAll();
 
         if(this.type === 'personal'){
           this.messages$ = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string));
         } else {
-          this.room$ = this.roomService.getById(this.id);
+          this.roomName$ = this.roomService.getById(this.id).pipe(map(room => room?.name));
           this.messages$ = this.messageService.getMessagesforRoom(this.id);
         }
     }); 

@@ -73,9 +73,10 @@ export class CreateRoomComponent implements OnInit {
     const value = event.value;
 
     // Add our member
-    if (!this.selectedMembers.has(this.allUsers.find(user => user.username === value) as User) 
+    const user = this.allUsers.find(user => user.username === value) as User;
+    if (!this.selectedMembers.has(user) 
       && this.allUsers.map(user => user.username).includes(value)) {
-      this.selectedMembers.add(this.allUsers.find(user => user.username === value) as User);
+      this.selectedMembers.add(user);
     }
 
     // Clear the input value

@@ -1,7 +1,7 @@
 <div class="main_container" *ngIf="users$ | async as users">
     <ng-container [ngSwitch]="type">
         <h1 class="target_name" *ngSwitchCase="'personal'">{{ id | fullName:users }}</h1>
-        <h1 class="target_name" *ngSwitchCase="'room'">{{ room$ | async | roomName }}</h1>
+        <h1 class="target_name" *ngSwitchCase="'room'">{{ roomName$ | async }}</h1>
     </ng-container>
     <div class="message_container">
         <div class="message" *ngFor="let message of messages$ | async; let i = index;">
