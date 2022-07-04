@@ -18,8 +18,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import { UsernamePipe } from '../../shared/pipes/username.pipe';
-import { FullNamePipe } from '../../shared/pipes/full-name.pipe';
+import { NameModule } from '../../shared/name/name.module';
 
 @NgModule({
   declarations: [
@@ -42,8 +41,7 @@ import { FullNamePipe } from '../../shared/pipes/full-name.pipe';
     MatDividerModule,
     TranslateModule,
     HttpClientModule,
-    UsernamePipe,
-    FullNamePipe
+    NameModule
   ]
 })
 export class MainModule { }
