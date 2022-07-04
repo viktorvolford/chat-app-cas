@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { UserService } from '../../../shared/services/user.service';
 
@@ -9,12 +9,10 @@ import { UserService } from '../../../shared/services/user.service';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit, OnDestroy {
+export class UserListComponent implements OnInit {
 
-  users?: Array<User>;
   loggedInUser?: string;
-
-  userLoadingSubscription?: Subscription;
+  users$?: Observable<User[]>;
 
   constructor(
     private userService: UserService,
@@ -22,14 +20,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.userLoadingSubscription = this.userService.getAll().subscribe(result => {
-      this.users = result;
-      this.loggedInUser = localStorage.getItem('user')?.slice(1,-1) as string;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.userLoadingSubscription?.unsubscribe();
+    this.users$ = this.userService.getAll();
+    this.loggedInUser = localStorage.getItem('user')?.slice(1,-1) as string;
   }
 
   openConversation(id: string){
