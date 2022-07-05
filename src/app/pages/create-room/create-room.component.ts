@@ -6,8 +6,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,13 +25,11 @@ export class CreateRoomComponent implements OnInit {
   chosenGroup?: string;
 
   @ViewChild('memberInput') memberInput?: ElementRef<HTMLInputElement>;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ ENTER, COMMA ];
 
-  allUsers = new Array<User>();
-  selectedMembers = new Set<User>();
-  filteredUsernames?: Observable<string[]>;
-
-  usersLoadingSubscription?: Subscription;
+  users$: Observable<User[]>;
+  selectedUsers = new Set<User>();
+  filteredUsernames$ = new Observable<string[]>();
 
   roomForm = this.createForm({
     name: '',
@@ -46,20 +44,17 @@ export class CreateRoomComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     public translate: TranslateService
-    ) {}
+    ) {
+      this.users$ = this.userService.getAll();
+    }
 
   ngOnInit(): void {
-    this.usersLoadingSubscription = this.userService.getAll().subscribe((data: Array<User>) => {
-      this.allUsers = data;
-    });
-    this.filteredUsernames = this.roomForm.get('member')?.valueChanges.pipe(
-      startWith(''),
-      map((member: string | null) => (member ? this._filter(member) : this.allUsers.map(user => user.username).slice())),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.usersLoadingSubscription?.unsubscribe;
+    this.filteredUsernames$ = this.roomForm.get('member')?.valueChanges.pipe(
+      startWith(null),
+      switchMap((searchValue: string | null) => searchValue ? this._filter(searchValue) : this.users$.pipe(
+        map(users => users.map(user => user.username))
+      )),
+    ) as Observable<string[]>;
   }
 
   createForm(model: RoomForm) {
@@ -69,14 +64,14 @@ export class CreateRoomComponent implements OnInit {
     return formGroup;
   }
 
-  add(event: MatChipInputEvent): void {
+  add(event: MatChipInputEvent, users: User[]): void {
     const value = event.value;
 
     // Add our member
-    const user = this.allUsers.find(user => user.username === value) as User;
-    if (!this.selectedMembers.has(user) 
-      && this.allUsers.map(user => user.username).includes(value)) {
-      this.selectedMembers.add(user);
+    const user = users.find(user => user.username === value) as User;
+    if (!this.selectedUsers.has(user) 
+      && users.map(user => user.username).includes(value)) {
+      this.selectedUsers.add(user);
     }
 
     // Clear the input value
@@ -85,22 +80,25 @@ export class CreateRoomComponent implements OnInit {
     this.roomForm.get('member')?.setValue(null);
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedMembers.add(this.allUsers.find(user => user.username === event.option.viewValue) as User);
+  selected(event: MatAutocompleteSelectedEvent, users: User[]): void {
+    const user = users.find(user => user.username === event.option.viewValue) as User;
+    this.selectedUsers.add(user);
     (this.memberInput as ElementRef<HTMLInputElement>).nativeElement.value = '';
     this.roomForm.get('member')?.setValue(null);
   }
 
   removeChip(member: User){
-    const index = this.selectedMembers.delete(member);
+    const index = this.selectedUsers.delete(member);
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  private _filter(searchValue: string): Observable<string[]> {
+    const filterValue = searchValue.toLowerCase();
 
-    return this.allUsers
-      .map(user => user.username)
-      .filter(username => username.toLowerCase().includes(filterValue));
+    return this.users$.pipe(
+      map(users => users
+        .map(user => user.username)
+        .filter(username => username.toLowerCase().includes(filterValue))),
+    )
   }
 
   onSubmit(){
@@ -108,7 +106,7 @@ export class CreateRoomComponent implements OnInit {
       this.roomService.create({
         id: '',
         name: this.roomForm.get('name')?.value as string,
-        members: Array.from(this.selectedMembers).map(user => user.id),
+        members: Array.from(this.selectedUsers).map(user => user.id),
         visibility: this.chosenGroup as string,
         owner_id: localStorage.getItem('user'),
         password: this.roomForm.get('password')?.value as string,

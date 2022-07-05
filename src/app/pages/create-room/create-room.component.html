@@ -18,27 +18,29 @@
 
             <mat-form-field *ngIf="chosenGroup === 'private'" class="example-chip-list" appearance="fill">
                 <mat-label>{{ 'CREATE_ROOM.MEMBERS' | translate }}</mat-label>
-                <mat-chip-list #chipList aria-label="Members">
-                  <mat-chip *ngFor="let user of selectedMembers" (removed)="removeChip(user)">
-                    {{user.username}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip>
-                  <input
-                    [placeholder]="'CREATE_ROOM.ADD_MEMBER' | translate"
-                    #memberInput
-                    formControlName="member"
-                    [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add($event)">
-                </mat-chip-list>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                    <mat-option *ngFor="let username of filteredUsernames | async" [value]="username">
-                      {{username}}
-                    </mat-option>
-                </mat-autocomplete>
+                <ng-container *ngIf="users$ | async as users">
+                  <mat-chip-list #chipList aria-label="Members">
+                    <mat-chip *ngFor="let user of selectedUsers" (removed)="removeChip(user)">
+                      {{user.username}}
+                      <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip>
+                    <input
+                      [placeholder]="'CREATE_ROOM.ADD_MEMBER' | translate"
+                      #memberInput
+                      formControlName="member"
+                      [matAutocomplete]="auto"
+                      [matChipInputFor]="chipList"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      (matChipInputTokenEnd)="add($event, users)">
+                  </mat-chip-list>
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, users)">
+                      <mat-option *ngFor="let username of filteredUsernames$ | async" [value]="username">
+                        {{username}}
+                      </mat-option>
+                  </mat-autocomplete>
+                </ng-container>
               </mat-form-field>
 
             <span>
