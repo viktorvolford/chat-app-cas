@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
-import { combineLatest, map, of, switchMap } from 'rxjs';
+import { combineLatest, map, of, scan, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +48,8 @@ export class MessageService {
           const [firstMes, secondMes] = messages;
           const combined = firstMes.concat(secondMes);
           return of(combined);
-        })
+        }),
+        map(messages => messages.sort((a, b) => a.date > b.date ? 1 : a.date < b.date ? -1 : 0))
       );
   }
 
