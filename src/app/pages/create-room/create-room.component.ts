@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable, Subscription } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { RoomForm } from '../../shared/models/RoomForm';
 
 @Component({
   selector: 'app-create-room',
@@ -35,8 +36,7 @@ export class CreateRoomComponent implements OnInit {
   roomForm = this.createForm({
     name: '',
     password: '',
-    member: '',
-
+    member: ''
   });
 
   constructor(
@@ -53,16 +53,16 @@ export class CreateRoomComponent implements OnInit {
       this.allUsers = data;
     });
     this.filteredUsernames = this.roomForm.get('member')?.valueChanges.pipe(
-      startWith('') as any,
+      startWith(''),
       map((member: string | null) => (member ? this._filter(member) : this.allUsers.map(user => user.username).slice())),
-    ) as any;
+    );
   }
 
   ngOnDestroy(): void {
     this.usersLoadingSubscription?.unsubscribe;
   }
 
-  createForm(model: any) {
+  createForm(model: RoomForm) {
     let formGroup = this.formBuilder.group(model);
     formGroup.get('name')?.addValidators([Validators.required]);
     formGroup.get('password')?.addValidators([Validators.minLength(4)]);
@@ -87,11 +87,11 @@ export class CreateRoomComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.selectedMembers.add(this.allUsers.find(user => user.username === event.option.viewValue) as User);
-    (this.memberInput as any).nativeElement.value = '';
+    (this.memberInput as ElementRef<HTMLInputElement>).nativeElement.value = '';
     this.roomForm.get('member')?.setValue(null);
   }
 
-  removeChip(member: any){
+  removeChip(member: User){
     const index = this.selectedMembers.delete(member);
   }
 
