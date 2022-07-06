@@ -7,7 +7,7 @@ import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -51,6 +51,7 @@ export class CreateRoomComponent implements OnInit {
   ngOnInit(): void {
     this.filteredUsernames$ = this.roomForm.get('member')?.valueChanges.pipe(
       startWith(null),
+      debounceTime(500),
       switchMap((searchValue: string | null) => searchValue ? this._filter(searchValue) : this.users$.pipe(
         map(users => users.map(user => user.username))
       )),
