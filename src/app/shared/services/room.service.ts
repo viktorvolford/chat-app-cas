@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { user } from '@angular/fire/auth';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable, ReplaySubject, share } from 'rxjs';
 import { Room } from '../models/Room';
 
 @Injectable({
@@ -22,20 +21,33 @@ export class RoomService {
   }
 
   getById(id: string) {
-    return this.afs.collection<Room>(this.collectionName).doc(id).valueChanges();
+    return this.afs.collection<Room>(this.collectionName).doc(id).valueChanges().pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
   }
 
   getRooms(type: string){
+    let rooms: Observable<Room[]>;
+
     if(type === 'public'){
-      return this.getPublicRooms();
+      rooms = this.getPublicRooms();
     }
     else if(type === 'private'){
       const uid = localStorage.getItem('user') as string;
-      return this.getPrivateRooms(uid);
+      rooms = this.getPrivateRooms(uid);
     }
     else{
-      return this.getProtectedRooms();
+      rooms = this.getProtectedRooms();
     }
+    return rooms.pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    )
   }
 
   getPublicRooms() {

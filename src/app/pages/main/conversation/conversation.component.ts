@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, Subscription } from 'rxjs';
+import { map, Observable, ReplaySubject, share, Subscription } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
@@ -63,7 +63,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
         if(this.type === 'personal'){
           this.messages$ = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string));
         } else {
-          this.roomName$ = this.roomService.getById(this.id).pipe(map(room => room?.name));
+          this.roomName$ = this.roomService.getById(this.id).pipe(
+            map(room => room?.name),
+            share({
+              connector: () => new ReplaySubject(1),
+              resetOnRefCountZero: false
+            })
+          );
           this.messages$ = this.messageService.getMessagesforRoom(this.id);
         }
     }); 

@@ -6,8 +6,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
-import { Observable } from 'rxjs';
-import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { debounceTime, map, share, startWith, switchMap } from 'rxjs/operators';
 import { Room } from '../../shared/models/Room';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -53,8 +53,12 @@ export class CreateRoomComponent implements OnInit {
       startWith(null),
       debounceTime(500),
       switchMap((searchValue: string | null) => searchValue ? this._filter(searchValue) : this.users$.pipe(
-        map(users => users.map(user => user.username))
+        map(users => users.map(user => user.username)),
       )),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
     ) as Observable<string[]>;
   }
 
@@ -98,7 +102,12 @@ export class CreateRoomComponent implements OnInit {
     return this.users$.pipe(
       map(users => users
         .map(user => user.username)
-        .filter(username => username.toLowerCase().includes(filterValue))),
+        .filter(username => username.toLowerCase().includes(filterValue))
+      ),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: true
+      })
     )
   }
 

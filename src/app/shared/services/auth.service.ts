@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import firebase from 'firebase/compat/app'; 
+import { ReplaySubject, share } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,12 @@ export class AuthService {
   }
 
   isUserLoggedIn(){
-    return this.auth.user;
+    return this.auth.user.pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
   }
 
   logout(){

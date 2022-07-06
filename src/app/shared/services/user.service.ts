@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ReplaySubject, share } from 'rxjs';
 import { User } from '../models/User';
 
 
@@ -18,11 +19,21 @@ export class UserService {
   }
 
   getAll() {
-    return this.afs.collection<User>(this.collectionName).valueChanges();
+    return this.afs.collection<User>(this.collectionName).valueChanges().pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
   }
 
   getById(id: string) {
-    return this.afs.collection<User>(this.collectionName).doc(id).valueChanges();
+    return this.afs.collection<User>(this.collectionName).doc(id).valueChanges().pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
   }
 
   update(user: User) {

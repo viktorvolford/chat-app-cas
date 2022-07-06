@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
-import { combineLatest, map, of, scan, switchMap } from 'rxjs';
+import { combineLatest, map, of, ReplaySubject, share, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,12 @@ export class MessageService {
       .where('type', '==', 'room')
       .where('target_id', '==', id)
       .orderBy('date', 'asc'))
-      .valueChanges();
+      .valueChanges().pipe(
+        share({
+          connector: () => new ReplaySubject(1),
+          resetOnRefCountZero: false
+        })
+      );
   }
 
   getPersonalMessages(firstId: string, secondId: string) {
@@ -49,12 +54,12 @@ export class MessageService {
           const combined = firstMes.concat(secondMes);
           return of(combined);
         }),
-        map(messages => messages.sort((a, b) => a.date > b.date ? 1 : a.date < b.date ? -1 : 0))
+        map(messages => messages.sort((a, b) => a.date > b.date ? 1 : a.date < b.date ? -1 : 0)),
+        share({
+          connector: () => new ReplaySubject(1),
+          resetOnRefCountZero: false
+        })
       );
-  }
-
-  getById(id: string) {
-    return this.afs.collection<Message>(this.collectionName).doc(id).valueChanges();
   }
 
   update(message: Message) {
