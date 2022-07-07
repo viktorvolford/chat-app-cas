@@ -1,39 +1,16 @@
 <div class="main_container" *ngIf="users$ | async as users">
-    <ng-container [ngSwitch]="type">
-        <h1 class="target_name" *ngSwitchCase="'personal'">{{ id | fullName:users }}</h1>
+    <ng-container [ngSwitch]="convoType">
+        <h1 class="target_name" *ngSwitchCase="'personal'">{{ convoId | fullName:users }}</h1>
         <h1 class="target_name" *ngSwitchCase="'room'">{{ roomName$ | async }}</h1>
     </ng-container>
     <div class="message_container">
-        <div class="message" *ngFor="let message of messages$ | async; let i = index;">
-            <mat-card [ngClass]="message.sender_id === loggedInUser ? 'my_message' : 'other_message'" class="mat-elevation-z4">
-                <mat-card-header>
-                    <mat-icon mat-card-avatar>face</mat-icon>
-                    <mat-card-title>
-                        {{ message.sender_id | fullName:users }}
-                    </mat-card-title>
-                    <mat-card-subtitle>
-                        {{ message.sender_id | username:users }}
-                    </mat-card-subtitle>
-                    <mat-icon *ngIf="message.sender_id === loggedInUser" [matMenuTriggerFor]="menu" class="options" aria-label="Options">more_vert</mat-icon>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="delete(message)">
-                          <mat-icon>delete</mat-icon>
-                          <span>{{'COMMON.DELETE' | translate}}</span>
-                        </button>
-                        <button mat-menu-item (click)="openEditDialog(message)">
-                          <mat-icon>edit</mat-icon>
-                          <span>{{'COMMON.EDIT' | translate}}</span>
-                        </button>
-                      </mat-menu>
-                </mat-card-header>
-                <mat-card-content>
-                    {{ message.content }}
-                </mat-card-content>
-                <mat-card-footer>
-                    {{ message.date | date:'short'}}
-                </mat-card-footer>
-            </mat-card>          
-        </div>
+        <app-message-box *ngFor="let message of messages$ | async; let i = index;" 
+            [message]="message" 
+            [loggedInUser]="loggedInUser" 
+            [users]="users" 
+            (deleteMessage)="deleteMessage($event)" 
+            (editMessage)="openEditDialog($event)">
+        </app-message-box>
     </div>
     <form class="message_form" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <mat-form-field>

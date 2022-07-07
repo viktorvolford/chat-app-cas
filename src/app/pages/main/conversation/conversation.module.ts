@@ -16,11 +16,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NameModule } from '../../../shared/name/name.module';
+import { MessageBoxComponent } from './message-box/message-box.component';
 
 @NgModule({
   declarations: [
     ConversationComponent,
-    EditDialogComponent
+    EditDialogComponent,
+    MessageBoxComponent
   ],
   imports: [
     CommonModule,

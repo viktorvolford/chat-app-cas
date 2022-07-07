@@ -1,0 +1,31 @@
+.message {
+    margin: 1rem 0;
+}
+
+.my_message{
+    float: right;
+    background-color: aquamarine;
+}
+
+.other_message{
+    float: left;
+    background-color: bisque;
+}
+
+.mat-card {
+    display: inline-block;
+}
+
+.mat-card-footer {
+    text-align: end;
+    padding: 0.5rem 1rem;
+}
+
+.options {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.target_name, .message_form {
+    text-align: center;
+}

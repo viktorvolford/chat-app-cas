@@ -6,7 +6,7 @@ import { User } from '../models/User';
 })
 export class UsernamePipe implements PipeTransform {
 
-  transform(value: string, users: User[]): string {
+  transform(value: string | undefined, users: User[]): string {
     return users.find(user => user.id === value)?.username as string;
   }
 }

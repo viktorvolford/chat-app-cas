@@ -19,8 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ConversationComponent implements OnInit, OnDestroy {
 
-  type?: string;
-  id?: string;
+  convoType?: string;
+  convoId?: string;
   loggedInUser: string = localStorage.getItem('user') as string;
 
   messages$?: Observable<Message[]>;
@@ -54,23 +54,23 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.queryParamSubscription = this.route.queryParamMap.subscribe(result => {
-        this.type = result.get('type') as string;
-        this.id = result.get('id') as string; 
+        this.convoType = result.get('type') as string;
+        this.convoId = result.get('id') as string; 
 
-        this.messageForm.get('type')?.setValue(this.type);
-        this.messageForm.get('target_id')?.setValue(this.id);
+        this.messageForm.get('type')?.setValue(this.convoType);
+        this.messageForm.get('target_id')?.setValue(this.convoId);
 
-        if(this.type === 'personal'){
-          this.messages$ = this.messageService.getPersonalMessages(this.id, (localStorage.getItem('user') as string));
+        if(this.convoType === 'personal'){
+          this.messages$ = this.messageService.getPersonalMessages(this.convoId, (localStorage.getItem('user') as string));
         } else {
-          this.roomName$ = this.roomService.getById(this.id).pipe(
+          this.roomName$ = this.roomService.getById(this.convoId).pipe(
             map(room => room?.name),
             share({
               connector: () => new ReplaySubject(1),
               resetOnRefCountZero: false
             })
           );
-          this.messages$ = this.messageService.getMessagesforRoom(this.id);
+          this.messages$ = this.messageService.getMessagesforRoom(this.convoId);
         }
     }); 
   }
@@ -93,7 +93,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
     }
   }
 
-  delete(message: Message){
+  deleteMessage(message: Message){
     this.messageService.delete(message.id).then(() => {
       this.snackBar.open(
         this.translate.instant('CONVERSATION.DELETED'), 
