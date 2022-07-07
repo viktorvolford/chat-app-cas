@@ -19,13 +19,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { NameModule } from '../../shared/name/name.module';
+import { RoomBoxComponent } from './room-list/room-box/room-box.component';
 
 @NgModule({
   declarations: [
     MainComponent,
     RoomListComponent,
     ProtectedDialogComponent,
-    UserListComponent
+    UserListComponent,
+    RoomBoxComponent
   ],
   imports: [
     CommonModule,

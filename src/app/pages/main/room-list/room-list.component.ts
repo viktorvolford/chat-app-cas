@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Observable, Subscription } from 'rxjs';
@@ -12,11 +12,12 @@ import { User } from '../../../shared/models/User';
 @Component({
   selector: 'app-room-list',
   templateUrl: './room-list.component.html',
-  styleUrls: ['./room-list.component.scss']
+  styleUrls: ['./room-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() chosenVisibility: string | undefined;
+  @Input() chosenVisibility: string = '';
 
   rooms$? : Observable<Room[]>;
   users$? : Observable<User[]>;

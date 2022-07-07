@@ -1,0 +1,14 @@
+$evenColor: #aee3fc;
+$oddColor: #579af7;
+
+.mat-card {
+    margin: 2rem;
+}
+
+.card-even{
+    background-color: $evenColor;
+}
+
+.card-odd{
+    background-color: $oddColor;
+}

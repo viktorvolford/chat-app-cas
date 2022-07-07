@@ -1,25 +1,10 @@
-<div *ngFor="let room of rooms$ | async; let i = index;">
-    <mat-card [ngStyle]="{'background-color' : i % 2 === 0 ? '#aee3fc' : '#579af7'}" class="mat-elevation-z4">
-        <mat-card-header>
-            <mat-card-title>
-                {{ room.name }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <p *ngIf="room.visibility === 'public'" [innerHTML]="'MAIN.PUBLIC_DESC' | translate"></p>
-            <p *ngIf="room.visibility === 'private' && (users$ | async) as users">
-                <span [innerHTML]="'MAIN.PRIVATE_DESC' | translate"></span>
-                <span *ngFor="let member of room.members; last as last">
-                    <b>{{ member | username:users }}</b>
-                    <span *ngIf="!last">, </span>
-                </span>
-            </p>
-            <p *ngIf="room.visibility === 'protected'" [innerHTML]="'MAIN.PASSWORD_PROTECTED_DESC' | translate"></p>
-        </mat-card-content>
-        <mat-card-actions>
-            <button mat-raised-button color="primary" type="button" (click)="chosenVisibility === 'protected' ? openDialog(room) : openChatroom(room.id)">
-                {{ 'MAIN.JOIN' | translate }}
-            </button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+<ng-container *ngIf="users$ | async as users">
+    <app-room-box *ngFor="let room of rooms$ | async; let i = index;"
+        [isEven]="i % 2 === 0"
+        [room]="room" 
+        [users]="users" 
+        [chosenVisibility]="chosenVisibility"
+        (openDialog)="openDialog($event)"
+        (openChatroom)="openChatroom($event)">
+    </app-room-box>
+</ng-container>
