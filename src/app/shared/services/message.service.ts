@@ -3,9 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
 import { combineLatest, map, of, ReplaySubject, share, switchMap } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MessageService {
 
   collectionName = 'Messages';

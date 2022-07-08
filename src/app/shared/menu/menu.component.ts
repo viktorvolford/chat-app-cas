@@ -9,12 +9,12 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MenuComponent implements OnInit {
 
+  @Input() loggedInUser?: string;
+  @Input() selectedLang: string = '';
+
   @Output() onCloseSidenav : EventEmitter<boolean> = new EventEmitter();
   @Output() onSwitchLanguage : EventEmitter<string> = new EventEmitter();
   @Output() onLogout : EventEmitter<boolean> = new EventEmitter();
-  @Input() loggedInUser?: string;
-
-  @Input() selectedLang: string = '';
 
   constructor(
     public translate: TranslateService

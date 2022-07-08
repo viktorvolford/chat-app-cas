@@ -17,6 +17,7 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NameModule } from '../../../shared/name/name.module';
 import { MessageBoxComponent } from './message-box/message-box.component';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,9 @@ import { MessageBoxComponent } from './message-box/message-box.component';
     TranslateModule,
     HttpClientModule,
     NameModule
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class ConversationModule { }
