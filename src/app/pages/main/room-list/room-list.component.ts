@@ -8,6 +8,7 @@ import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/models/User';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-room-list',
@@ -29,7 +30,8 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private translate: TranslateService
     ) { }
 
   ngOnChanges(): void {
@@ -54,7 +56,10 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
       if(result === room.password){
         this.openChatroom(room.id);
       } else if(result !== undefined && result !== null){
-        this.snackBar.open('The entered password was incorrect!', 'OK', {duration: 2000});
+        this.snackBar.open(
+          this.translate.instant('MAIN.INCORRECT_PASSWORD'), 
+          this.translate.instant('COMMON.OK'), 
+          {duration: 2000});
       }
     });
   }

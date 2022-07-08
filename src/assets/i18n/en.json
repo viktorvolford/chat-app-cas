@@ -46,7 +46,8 @@
         "PRIVATE_DESC": "This is a private room.<br>The only ones that can see this conversations are: ",
         "PASSWORD_PROTECTED_DESC": "This is a protected room.<br>You can only join the conversation if you enter the password given by the room owner.",
         "PASSWORD_PROTECTION": "Password protection",
-        "ENTER_PASSWORD": "Enter <b>{{value}}</b>'s secret key below:"
+        "ENTER_PASSWORD": "Enter <b>{{value}}</b>'s secret key below:",
+        "INCORRECT_PASSWORD": "The entered password was incorrect!"
     },
     "CREATE_ROOM": {
         "BANNER": "Create a new chatroom",

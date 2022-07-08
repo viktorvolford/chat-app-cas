@@ -46,7 +46,8 @@
         "PRIVATE_DESC": "Ez egy privát szoba.<br>Csak számukra látható: ",
         "PASSWORD_PROTECTED_DESC": "Ez egy jelszóval védett szoba.<br>Csak a szobajelszó megadása után csatlakozhatsz a beszélgetéshez.",
         "PASSWORD_PROTECTION": "Jelszó védelem",
-        "ENTER_PASSWORD": "Add meg lent a(z) <b>{{value}}</b> szoba jelszavát:"
+        "ENTER_PASSWORD": "Add meg lent a(z) <b>{{value}}</b> szoba jelszavát:",
+        "INCORRECT_PASSWORD": "The entered password was incorrect!"
     },
     "CREATE_ROOM": {
         "BANNER": "Hozz létre egy új szobát",
