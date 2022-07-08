@@ -1,13 +1,12 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 
-import { User } from '../../shared/models/User'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { Name, UserForm } from '../../shared/models/UserForm';
 
 @Component({
   selector: 'app-signup',
@@ -31,7 +30,6 @@ export class SignupComponent implements OnInit {
   });
 
   constructor(
-    private router: Router,
     private location: Location,
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -43,7 +41,7 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createForm(model: any) {
+  createForm(model: UserForm | Name) {
     let formGroup = this.formBuilder.group(model);
     formGroup.get('email')?.addValidators([Validators.required, Validators.email]);
     formGroup.get('username')?.addValidators([Validators.required, Validators.minLength(5)]);
@@ -56,32 +54,17 @@ export class SignupComponent implements OnInit {
 
   onSubmit(){
     if(this.signUpForm.get('password')?.value !== this.signUpForm.get('rePassword')?.value){
-      this.snackBar.open('Passwords must match.', 'OK', {duration: 2000});
+      this.snackBar.open(
+        this.translate.instant('LOGIN_REGISTER.PASSWORD_MISMATCH'), 
+        this.translate.instant('COMMON.OK'), 
+        {duration: 2000});
       return;
     }
     this.authService.signup(this.signUpForm.get('email')?.value as string, this.signUpForm.get('password')?.value as string)
     .then(cred => {
-      const user : User = {
-        id: cred.user?.uid as string,
-        email: this.signUpForm.get('email')?.value as string,
-        username: this.signUpForm.get('username')?.value as string,
-        name: {
-          firstname: this.signUpForm.get('name.firstname')?.value,
-          lastname: this.signUpForm.get('name.lastname')?.value
-        },
-        last_active: new Date().getTime()
-      };
-      this.userService.create(user).then(_ => {
-        this.snackBar.open(
-          this.translate.instant('LOGIN_REGISTER.CREATED'), 
-          this.translate.instant('COMMON.GREAT'),
-          {duration: 2000});
-        this.router.navigateByUrl('/main');
-      }).catch(error => {
-        console.log(error);
-      });
-    }).catch(err => {
-      console.log(err);
+      this.userService.createUserFromForm(this.signUpForm, cred as any);
+    }).catch(error => {
+      console.log(error);
     });
   }
 
