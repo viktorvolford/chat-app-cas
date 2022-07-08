@@ -61,7 +61,7 @@ export class UserService {
     return this.afs.collection<User>(this.collectionName).doc(id).delete();
   }
 
-  getFilteredUsernames(field: AbstractControl<any>): Observable<string[]>{
+  getFilteredUsernames(field: AbstractControl): Observable<string[]>{
     return field.valueChanges.pipe(
       startWith(null),
       debounceTime(500),
@@ -109,7 +109,7 @@ export class UserService {
     });
   }
 
-  createUserFromForm(form: FormGroup<any>, cred: UserCredential) {
+  createUserFromForm(form: FormGroup, cred: UserCredential) {
     const user : User = {
       id: cred.user?.uid as string,
       email: form.get('email')?.value as string,

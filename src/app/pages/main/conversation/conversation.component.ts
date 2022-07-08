@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, ReplaySubject, share, Subscription } from 'rxjs';
+import { map, Observable, ReplaySubject, share, Subscription, take } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
@@ -9,7 +9,6 @@ import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -53,25 +52,14 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.queryParamSubscription = this.route.queryParamMap.subscribe(result => {
+    this.queryParamSubscription = this.route.queryParamMap.pipe(take(1)).subscribe(result => {
         this.convoType = result.get('type') as string;
         this.convoId = result.get('id') as string; 
 
         this.messageForm.get('type')?.setValue(this.convoType);
         this.messageForm.get('target_id')?.setValue(this.convoId);
 
-        if(this.convoType === 'personal'){
-          this.messages$ = this.messageService.getPersonalMessages(this.convoId, (localStorage.getItem('user') as string));
-        } else {
-          this.roomName$ = this.roomService.getById(this.convoId).pipe(
-            map(room => room?.name),
-            share({
-              connector: () => new ReplaySubject(1),
-              resetOnRefCountZero: false
-            })
-          );
-          this.messages$ = this.messageService.getMessagesforRoom(this.convoId);
-        }
+        this.loadMessages(this.convoType, this.convoId);
     }); 
   }
 
@@ -80,17 +68,24 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this.dialogSubscription?.unsubscribe();
   }
 
-  sendMessage(){
-    console.log(this.messageForm.value);
-    if (this.messageForm.get('content')?.value) {
-      this.messageForm.get('date')?.setValue(new Date().getTime());
-
-      this.messageService.create(this.messageForm.value as Message).then(_ => {
-        this.messageForm.get('content')?.setValue('');
-      }).catch(error => {
-        console.error(error);
-      });
+  loadMessages(convoType?: string, convoId?: string){
+    convoId = convoId as string;
+    if(convoType === 'personal'){
+      this.messages$ = this.messageService.getPersonalMessages(convoId, (localStorage.getItem('user') as string));
+    } else {
+      this.roomName$ = this.roomService.getById(convoId).pipe(
+        map(room => room?.name),
+        share({
+          connector: () => new ReplaySubject(1),
+          resetOnRefCountZero: false
+        })
+      );
+      this.messages$ = this.messageService.getMessagesforRoom(convoId);
     }
+  }
+
+  sendMessage(){
+    this.messageService.sendMessage(this.messageForm);
   }
 
   deleteMessage(message: Message){
@@ -103,24 +98,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   openEditDialog(message: Message){
-    const dialogRef = this.dialog.open(EditDialogComponent, {data: {message}});
-
-    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
-      if(result && result !== message.content){
-        message.content = result; 
-        this.messageService.update(message).then(() => {
-          this.snackBar.open(
-            this.translate.instant('CONVERSATION.MODIFIED'), 
-            this.translate.instant('COMMON.OK'), 
-            {duration: 2000});
-        });
-      } else if(result === ''){
-        this.snackBar.open(
-          this.translate.instant('CONVERSATION.EMPTY'), 
-          this.translate.instant('COMMON.OK'), 
-          {duration: 2000});
-      }
-    });
+    this.messageService.openEditDialog(message);
   }
 
 }
