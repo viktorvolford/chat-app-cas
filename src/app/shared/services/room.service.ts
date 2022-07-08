@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, ReplaySubject, share } from 'rxjs';
 import { Room } from '../models/Room';
 import { User } from '../models/User';

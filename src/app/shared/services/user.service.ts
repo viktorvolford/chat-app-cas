@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { debounceTime, map, Observable, ReplaySubject, share, startWith, switchMap } from 'rxjs';
+import { debounceTime, map, Observable, ReplaySubject, share, startWith, switchMap, take } from 'rxjs';
 import { User } from '../models/User';
 import { AbstractControl } from '@angular/forms';
+import { UserCredential } from '@angular/fire/auth';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -14,7 +17,11 @@ export class UserService {
 
   users$: Observable<User[]>;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(
+    private afs: AngularFirestore,
+    private snackBar: MatSnackBar,
+    private router: Router
+    ) {
     this.users$ = this.getAll();
   }
 
@@ -80,4 +87,28 @@ export class UserService {
       })
     )
   }
+
+  registerUser(cred: UserCredential){
+    this.getById(cred.user.uid).pipe(take(1)).subscribe(data => {
+      if(!data){
+          const user : User = {
+              id: cred.user?.uid as string,
+              email: cred.user.email as string,
+              username: cred.user.displayName as string,
+              name: {
+                firstname: cred.user.displayName?.split(' ')[0] as string,
+                lastname: cred.user.displayName?.split(' ')[1] as string
+              },
+              last_active: new Date().getTime()
+          };
+          this.create(user).then(_ => {
+          this.snackBar.open('User has been created successfully!', 'Great', {duration: 2000});
+          this.router.navigateByUrl('/main');
+          }).catch(error => {
+          console.log(error);
+          });  
+      }
+    });
+  }
+  
 }
