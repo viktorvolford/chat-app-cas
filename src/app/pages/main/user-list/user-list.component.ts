@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.users$ = this.userService.getAll();
+    this.users$ = this.userService.users$;
     this.loggedInUser = localStorage.getItem('user') as string;
   }
 

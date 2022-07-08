@@ -49,7 +49,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     public translate: TranslateService
   ) { 
-    this.users$ = this.userService.getAll();
+    this.users$ = this.userService.users$;
   }
 
   ngOnInit(): void {

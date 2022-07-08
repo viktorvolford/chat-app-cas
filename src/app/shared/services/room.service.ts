@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, ReplaySubject, share } from 'rxjs';
 import { Room } from '../models/Room';
+import { User } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -68,5 +71,16 @@ export class RoomService {
 
   delete(id: string) {
     return this.afs.collection<Room>(this.collectionName).doc(id).delete();
+  }
+
+  onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenGroup: string): Promise<void>{
+    return this.create({
+      id: '',
+      name: form.get('name')?.value as string,
+      members: Array.from(selectedUsers).map(user => user.id),
+      visibility: chosenGroup as string,
+      owner_id: localStorage.getItem('user'),
+      password: form.get('password')?.value as string,
+    } as Room)
   }
 }

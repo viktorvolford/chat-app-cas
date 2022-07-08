@@ -2,17 +2,15 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } fro
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
-import { Observable, ReplaySubject } from 'rxjs';
-import { debounceTime, map, share, startWith, switchMap } from 'rxjs/operators';
-import { Room } from '../../shared/models/Room';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { RoomForm } from '../../shared/models/RoomForm';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-room',
@@ -28,8 +26,8 @@ export class CreateRoomComponent implements OnInit {
   separatorKeysCodes: number[] = [ ENTER, COMMA ];
 
   users$: Observable<User[]>;
+  filteredUsernames$: Observable<string[]>;
   selectedUsers = new Set<User>();
-  filteredUsernames$ = new Observable<string[]>();
 
   roomForm = this.createForm({
     name: '',
@@ -41,26 +39,15 @@ export class CreateRoomComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private roomService: RoomService,
+    public translate: TranslateService,
     private router: Router,
-    private snackBar: MatSnackBar,
-    public translate: TranslateService
+    private snackBar: MatSnackBar
     ) {
-      this.users$ = this.userService.getAll();
+      this.users$ = this.userService.users$;
+      this.filteredUsernames$ = this.userService.getFilteredUsernames(this.roomForm.get('member') as AbstractControl<any>);
     }
 
-  ngOnInit(): void {
-    this.filteredUsernames$ = this.roomForm.get('member')?.valueChanges.pipe(
-      startWith(null),
-      debounceTime(500),
-      switchMap((searchValue: string | null) => searchValue ? this._filter(searchValue) : this.users$.pipe(
-        map(users => users.map(user => user.username)),
-      )),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      })
-    ) as Observable<string[]>;
-  }
+  ngOnInit(): void {}
 
   createForm(model: RoomForm) {
     let formGroup = this.formBuilder.group(model);
@@ -96,32 +83,9 @@ export class CreateRoomComponent implements OnInit {
     const index = this.selectedUsers.delete(member);
   }
 
-  private _filter(searchValue: string): Observable<string[]> {
-    const filterValue = searchValue.toLowerCase();
-
-    return this.users$.pipe(
-      map(users => users
-        .map(user => user.username)
-        .filter(username => username.toLowerCase().includes(filterValue))
-      ),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: true
-      })
-    )
-  }
-
   onSubmit(){
     if(this.roomForm.valid){
-      this.roomService.create({
-        id: '',
-        name: this.roomForm.get('name')?.value as string,
-        members: Array.from(this.selectedUsers).map(user => user.id),
-        visibility: this.chosenGroup as string,
-        owner_id: localStorage.getItem('user'),
-        password: this.roomForm.get('password')?.value as string,
-      } as Room)
-      .then(() => { 
+      this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenGroup as string).then(() => { 
         this.snackBar.open(
           this.translate.instant('CREATE_ROOM.CREATED'), 
           this.translate.instant('COMMON.GREAT'), 

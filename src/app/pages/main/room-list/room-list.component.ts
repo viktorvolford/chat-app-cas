@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Observable, Subscription } from 'rxjs';
@@ -34,7 +34,7 @@ export class RoomListComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(): void {
     this.rooms$ = this.roomService.getRooms(this.chosenVisibility as string);
-    this.users$ = this.userService.getAll();
+    this.users$ = this.userService.users$;
   }
 
   ngOnInit(): void {}
