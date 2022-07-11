@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,17 +10,14 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   public selectedLang: string = '';
 
-  public loggedInUser?: string;
-
-  private authSubscription: Subscription;
+  public loggedInUser: Observable<string>;
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router,
     public readonly translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
@@ -30,29 +26,12 @@ export class AppComponent implements OnInit, OnDestroy {
     const browserLang = translate.getBrowserLang() as string;
     translate.use(browserLang.match(/en|hu/) ? browserLang : 'en');
 
-    this.authSubscription = this.authService.isUserLoggedIn().subscribe({
-      next: (user) => {
-        if(user !== null) {
-          this.loggedInUser = user?.uid;
-          localStorage.setItem('user', JSON.stringify(this.loggedInUser).slice(1, -1));
-          this.authService.startKeepAlive();
-        }
-      }, 
-      error: (e) => {
-        console.log(e);
-        localStorage.removeItem('user');
-        this.authService.stopKeepAlive();
-      }
-    });
+    this.loggedInUser = this.authService.loggedInUser$;
   }
 
   ngOnInit() : void {
     this.selectedLang = this.translate.currentLang;
     
-  }
-
-  ngOnDestroy(): void {
-    this.authSubscription.unsubscribe();
   }
 
   public onToggleSideNav(sidenav : MatSidenav) : void {
@@ -71,13 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public logout(_?: boolean) : void{
-    this.authService.logout().then(() => {
-      this.loggedInUser = '';
-      this.router.navigateByUrl('/login');
-      console.log('Logged out successfuly!');
-      this.authService.stopKeepAlive();
-    }).catch(error => {
-      console.log(error);
-    });
+    this.authService.logout();
   }
 }

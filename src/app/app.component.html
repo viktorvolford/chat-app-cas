@@ -1,6 +1,8 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav>
-        <app-menu [loggedInUser]="loggedInUser" [selectedLang]="selectedLang" (onSwitchLanguage)="switchLanguage($event)" (onCloseSidenav)="onClose($event, sidenav)" (onLogout)="logout()"></app-menu>
+        <ng-container *ngIf="{user: loggedInUser | async} as loggedInUser">
+            <app-menu [loggedInUser]="loggedInUser.user" [selectedLang]="selectedLang" (onSwitchLanguage)="switchLanguage($event)" (onCloseSidenav)="onClose($event, sidenav)" (onLogout)="logout()"></app-menu>
+        </ng-container>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">
@@ -13,12 +15,12 @@
                 <a [routerLink]="['/']">Chat App</a>
             </div>
             <div class="navbar">
-                <ul class="navigation-items">
-                    <li *ngIf="loggedInUser"><a routerLink="/login" (click)="logout()">{{ 'MENU.LOGOUT' | translate }}</a></li>
-                    <li *ngIf="!(loggedInUser)"><a routerLink="/login">{{ 'MENU.LOGIN' | translate }}</a></li>
-                    <li *ngIf="!(loggedInUser)"><a routerLink="/signup">{{ 'MENU.REGISTER' | translate }}</a></li>
-                    <li *ngIf="loggedInUser"><a routerLink="/main">{{ 'MENU.CONVERSATIONS' | translate }}</a></li>
-                    <li *ngIf="loggedInUser"><a routerLink="/create-room">{{ 'MENU.CREATE_ROOM' | translate }}</a></li>
+                <ul class="navigation-items" *ngIf="{user: loggedInUser | async} as loggedInUser">
+                    <li *ngIf="loggedInUser.user"><a routerLink="/login" (click)="logout()">{{ 'MENU.LOGOUT' | translate }}</a></li>
+                    <li *ngIf="!(loggedInUser.user)"><a routerLink="/login">{{ 'MENU.LOGIN' | translate }}</a></li>
+                    <li *ngIf="!(loggedInUser.user)"><a routerLink="/signup">{{ 'MENU.REGISTER' | translate }}</a></li>
+                    <li *ngIf="loggedInUser.user"><a routerLink="/main">{{ 'MENU.CONVERSATIONS' | translate }}</a></li>
+                    <li *ngIf="loggedInUser.user"><a routerLink="/create-room">{{ 'MENU.CREATE_ROOM' | translate }}</a></li>
                     <li>
                         <mat-select [(ngModel)]="selectedLang" (selectionChange)="switchLanguage(selectedLang)">
                             <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">

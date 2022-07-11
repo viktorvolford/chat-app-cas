@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import firebase from 'firebase/compat/app'; 
-import { ReplaySubject, share } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, share } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,29 @@ export class AuthService {
 
   private keepAlive?: any;
 
+  public loggedInUser$: BehaviorSubject<string> = new BehaviorSubject('');
+
   constructor(
-    private auth: AngularFireAuth,
-    private userService: UserService
-    ) {}
+    private readonly auth: AngularFireAuth,
+    private readonly userService: UserService,
+    private readonly router: Router
+    ) {
+      this.isUserLoggedIn().subscribe({
+        next: (user) => {
+          if(user !== null) {
+            console.log(user?.uid);
+            this.loggedInUser$.next(user?.uid);
+            localStorage.setItem('user', JSON.stringify(user?.uid).slice(1, -1));
+            this.startKeepAlive();
+          }
+        }, 
+        error: (e) => {
+          console.log(e);
+          localStorage.removeItem('user');
+          this.stopKeepAlive();
+        }
+      });
+    }
 
   public login(email: string, password: string){
     return this.auth.signInWithEmailAndPassword(email, password);
@@ -44,9 +64,14 @@ export class AuthService {
     );
   }
 
-  public logout(){
-    return this.auth.signOut().then(() => {
-      localStorage.removeItem('user');
+  public logout() : void{
+    this.auth.signOut().then(() => {
+        localStorage.removeItem('user');
+        this.loggedInUser$.next('');
+        this.router.navigateByUrl('/login');
+        this.stopKeepAlive();
+    }).catch(error => {
+      console.log(error);
     });
   }
 
