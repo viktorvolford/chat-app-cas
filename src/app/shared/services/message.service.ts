@@ -83,7 +83,7 @@ export class MessageService {
   public openEditDialog(message: Message){
     const dialogRef = this.dialog.open(EditDialogComponent, {data: {message}});
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       if(result && result !== message.content){
         message.content = result; 
         this.update(message).then(() => {
