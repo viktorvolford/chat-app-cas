@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
+import { SnackbarComponent } from '../components/snackbar/snackbar.component';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +9,17 @@ export class ToastService {
 
   constructor(
     private readonly snackBar: MatSnackBar, 
-    private readonly translate: TranslateService
     ) { }
 
   public createSnackBar(content: string, action: string, duration: number = 2000){
-    this.snackBar.open(
-      this.translate.instant(content),
-      this.translate.instant(action),
-      {duration}
-    )
+    this.snackBar.openFromComponent(
+      SnackbarComponent,
+      {
+        data: {content: content, action: action},
+        duration: duration,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'center'
+      }
+    );
   }
 }

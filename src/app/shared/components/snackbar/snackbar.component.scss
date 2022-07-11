@@ -1,0 +1,15 @@
+  /* Snackbar styling */
+  .snack_container {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .snack_container .action {
+      margin-left: 3rem;
+      cursor: pointer;
+      color: yellow;
+  }
