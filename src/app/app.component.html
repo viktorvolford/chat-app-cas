@@ -1,6 +1,6 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav>
-        <app-menu [loggedInUser]="loggedInUser" [selectedLang]="selectedLang" (onSwitchLanguage)="switchLanguage($event)" (onCloseSidenav)="onClose($event, sidenav)" (onLogout)="logout($event)"></app-menu>
+        <app-menu [loggedInUser]="loggedInUser" [selectedLang]="selectedLang" (onSwitchLanguage)="switchLanguage($event)" (onCloseSidenav)="onClose($event, sidenav)" (onLogout)="logout()"></app-menu>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">

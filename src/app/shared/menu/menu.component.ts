@@ -14,7 +14,7 @@ export class MenuComponent implements OnInit {
 
   @Output() onCloseSidenav : EventEmitter<boolean> = new EventEmitter();
   @Output() onSwitchLanguage : EventEmitter<string> = new EventEmitter();
-  @Output() onLogout : EventEmitter<boolean> = new EventEmitter();
+  @Output() onLogout : EventEmitter<any> = new EventEmitter();
 
   constructor(
     public translate: TranslateService
@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit {
 
   close(logout?: boolean){
     if(logout === true){
-      this.onLogout.emit(logout);
+      this.onLogout.emit();
     }
     this.onCloseSidenav.emit(true);
   }
