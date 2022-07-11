@@ -1,37 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormGroup } from '@angular/forms';
-import { Observable, ReplaySubject, share } from 'rxjs';
+import { Router } from '@angular/router';
+import { map, Observable, ReplaySubject, share } from 'rxjs';
 import { Room } from '../models/Room';
 import { User } from '../models/User';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
 
-  collectionName = 'Rooms';
+  private collectionName = 'Rooms';
 
   constructor(
-    private afs: AngularFirestore
+    private readonly afs: AngularFirestore,
+    private readonly toast: ToastService,
+    private readonly router: Router
   ) { }
 
-  create(room: Room) {
-    return this.afs.collection<Room>(this.collectionName).add(room).then(res => {
-      this.afs.collection<Room>(this.collectionName).doc(res.id).update({id: res.id});
-    });
-  }
-
-  getById(id: string) {
-    return this.afs.collection<Room>(this.collectionName).doc(id).valueChanges().pipe(
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      })
-    );
-  }
-
-  getRooms(type: string){
+  public getRooms(type: string) : Observable<Room[]> {
     let rooms: Observable<Room[]>;
 
     if(type === 'public'){
@@ -52,34 +41,47 @@ export class RoomService {
     )
   }
 
-  getPublicRooms() {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'public')).valueChanges();
+  public getRoomNameById(id: string) : Observable<string> {
+    return this.afs.collection<Room>(this.collectionName).doc(id).valueChanges().pipe(
+      map(room => room?.name as string),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
   }
 
-  getPrivateRooms(user_id: string) {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'private').where('members', 'array-contains', user_id)).valueChanges();
-  }
-
-  getProtectedRooms() {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'protected')).valueChanges();
-  }
-
-  update(room: Room) {
-    return this.afs.collection<Room>(this.collectionName).doc(room.id).set(room);
-  }
-
-  delete(id: string) {
-    return this.afs.collection<Room>(this.collectionName).doc(id).delete();
-  }
-
-  onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenGroup: string): Promise<void>{
-    return this.create({
+  public onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenGroup: string): void {
+    this.create({
       id: '',
       name: form.get('name')?.value as string,
       members: Array.from(selectedUsers).map(user => user.id),
       visibility: chosenGroup as string,
       owner_id: localStorage.getItem('user'),
       password: form.get('password')?.value as string,
-    } as Room)
+    } as Room).then(_ => {
+      this.toast.createSnackBar('CREATE_ROOM.CREATED', 'COMMON.GREAT');
+      this.router.navigateByUrl('/main');
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  private getPublicRooms() : Observable<Room[]> {
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'public')).valueChanges();
+  }
+
+  private getPrivateRooms(user_id: string) : Observable<Room[]> {
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'private').where('members', 'array-contains', user_id)).valueChanges();
+  }
+
+  private getProtectedRooms() : Observable<Room[]> {
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'protected')).valueChanges();
+  }
+
+  private create(room: Room) : Promise<void> {
+    return this.afs.collection<Room>(this.collectionName).add(room).then(res => {
+      this.afs.collection<Room>(this.collectionName).doc(res.id).update({id: res.id});
+    });
   }
 }
