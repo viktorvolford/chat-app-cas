@@ -3,32 +3,39 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import firebase from 'firebase/compat/app'; 
 import { ReplaySubject, share } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  keepAlive?: any;
+
+  private keepAlive?: any;
 
   constructor(
     private auth: AngularFireAuth,
     private userService: UserService
     ) {}
 
-  login(email: string, password: string){
+  public login(email: string, password: string){
     return this.auth.signInWithEmailAndPassword(email, password);
   }
 
-  loginWithGoogle(){
+  public loginWithGoogle(){
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider;
     return this.auth.signInWithPopup(googleAuthProvider);
   }
 
-  signup(email: string, password: string){
-    return this.auth.createUserWithEmailAndPassword(email, password);
+  public signup(form: FormGroup) : Promise<any> {
+    const {email, password} = form.value; 
+    return this.auth.createUserWithEmailAndPassword(email, password).then(cred => {
+      this.userService.createUserFromForm(form, cred as any);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
-  isUserLoggedIn(){
+  public isUserLoggedIn(){
     return this.auth.user.pipe(
       share({
         connector: () => new ReplaySubject(1),
@@ -37,13 +44,13 @@ export class AuthService {
     );
   }
 
-  logout(){
+  public logout(){
     return this.auth.signOut().then(() => {
       localStorage.removeItem('user');
     });
   }
 
-  startKeepAlive(){
+  public startKeepAlive(){
     const user = localStorage.getItem('user');
     this.userService.updateTime(user as string, new Date().getTime());
     this.keepAlive = setInterval(() => {
@@ -51,7 +58,7 @@ export class AuthService {
     }, 60000);
   }
 
-  stopKeepAlive(){
+  public stopKeepAlive(){
     clearInterval(this.keepAlive);
   }
 }
