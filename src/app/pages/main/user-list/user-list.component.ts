@@ -12,8 +12,8 @@ import { UserService } from '../../../shared/services/user.service';
 })
 export class UserListComponent implements OnInit {
 
-  loggedInUser?: string;
-  users$?: Observable<User[]>;
+  public loggedInUser?: string;
+  public users$?: Observable<User[]>;
 
   constructor(
     private userService: UserService,
@@ -25,11 +25,11 @@ export class UserListComponent implements OnInit {
     this.loggedInUser = localStorage.getItem('user') as string;
   }
 
-  openConversation(id: string){
+  public openConversation(id: string){
     this.router.navigate(['main/conversation'], {queryParams: {type: 'personal', id: id}});
   }
 
-  isOnline(user: User): boolean {
+  public isOnline(user: User): boolean {
     return new Date().getTime() - user.last_active > 60001 ? false : true;
   }
 

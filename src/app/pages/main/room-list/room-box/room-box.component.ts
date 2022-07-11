@@ -10,23 +10,23 @@ import { Room } from '../../../../shared/models/Room';
 })
 export class RoomBoxComponent implements OnInit {
 
-  @Input() room?: Room;
-  @Input() users: User[] = [];
-  @Input() chosenVisibility: string = '';
-  @Input() isEven?: Boolean;
+  @Output() private openDialog: EventEmitter<Room> = new EventEmitter();
+  @Output() private openChatroom: EventEmitter<string> = new EventEmitter();
 
-  @Output() openDialog: EventEmitter<Room> = new EventEmitter();
-  @Output() openChatroom: EventEmitter<string> = new EventEmitter();
+  @Input() public room?: Room;
+  @Input() public users: User[] = [];
+  @Input() public chosenVisibility: string = '';
+  @Input() public isEven?: Boolean;
 
   constructor() { }
 
   ngOnInit(): void {}
 
-  onOpenDialog(room: Room | undefined){
+  public onOpenDialog(room: Room | undefined){
     this.openDialog.emit(room);
   }
 
-  onOpenChatroom(id: string | undefined){
+  public onOpenChatroom(id: string | undefined){
     this.openChatroom.emit(id);
   }
 
