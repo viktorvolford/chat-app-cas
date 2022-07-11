@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../shared/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LoginForm } from 'src/app/shared/models/LoginForm';
 
 @Component({
   selector: 'app-login',
@@ -14,32 +14,30 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LoginComponent implements OnInit {
 
-    hide: boolean = true;
-    loading: boolean = false;
+    public hide: boolean = true;
+    public loading: boolean = false;
     
-    loginForm = this.formBuilder.group({
-        email: [''],
-        password: ['']
-    });
+    public loginForm = this.formBuilder.group({
+        email: '',
+        password: ''
+    } as LoginForm);
     
     constructor(
-        private router: Router, 
-        private formBuilder: FormBuilder,
-        private authService: AuthService,
-        private userService: UserService,
-        private snackBar: MatSnackBar,
-        private translate: TranslateService
+        private readonly formBuilder: FormBuilder,
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
+        private readonly snackBar: MatSnackBar,
+        private readonly translate: TranslateService
         ) { }
         
     ngOnInit(): void {     
         this.addValidators();
     }
     
-    login(loginType: string){
+    public login(loginType: string) : void {
         this.loading = true;
         this.getCredentialsForType(loginType).then(cred => {
             this.userService.createNonExistingUser(cred);
-            this.router.navigateByUrl('/main');
         }).catch(err => {
             this.onAuthFailed(err);
         }).finally(() => {
@@ -47,7 +45,7 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    onAuthFailed(err: any){
+    private onAuthFailed(err: any) : void {
         console.error(err);
         this.loginForm.get('email')?.setValue('');
         this.loginForm.get('password')?.setValue('');
@@ -58,15 +56,16 @@ export class LoginComponent implements OnInit {
         );
     }
 
-    getCredentialsForType(loginType: string) : Promise<any> {
+    private getCredentialsForType(loginType: string) : Promise<any> {
         if(loginType === 'google'){
             return this.authService.loginWithGoogle();
         } else {
-            return this.authService.login(this.loginForm.get('email')?.value as string, this.loginForm.get('password')?.value as string);
+            const { email, password} = this.loginForm.value;
+            return this.authService.login(email as string, password as string);
         }
     }
     
-    addValidators() {
+    private addValidators() : void {
         this.loginForm.get('email')?.addValidators([Validators.required, Validators.email]);
         this.loginForm.get('password')?.addValidators([Validators.required, Validators.minLength(5)]);
     }
