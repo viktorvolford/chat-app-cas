@@ -7,10 +7,7 @@ import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { RoomForm } from '../../shared/models/RoomForm';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-room',
@@ -20,14 +17,15 @@ import { Router } from '@angular/router';
 })
 export class CreateRoomComponent implements OnInit {
 
-  chosenGroup?: string;
+  public selectedUsers = new Set<User>();
 
-  @ViewChild('memberInput') memberInput?: ElementRef<HTMLInputElement>;
-  separatorKeysCodes: number[] = [ ENTER, COMMA ];
+  public chosenGroup?: string;
 
-  users$: Observable<User[]>;
-  filteredUsernames$: Observable<string[]>;
-  selectedUsers = new Set<User>();
+  @ViewChild('memberInput') private memberInput?: ElementRef<HTMLInputElement>;
+  public separatorKeysCodes: number[] = [ ENTER, COMMA ];
+
+  public users$: Observable<User[]>;
+  public filteredUsernames$: Observable<string[]>;
 
   roomForm = this.createForm({
     name: '',
@@ -36,27 +34,17 @@ export class CreateRoomComponent implements OnInit {
   });
 
   constructor(
-    private formBuilder: FormBuilder,
-    private userService: UserService,
-    private roomService: RoomService,
-    public translate: TranslateService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private readonly formBuilder: FormBuilder,
+    private readonly userService: UserService,
+    private readonly roomService: RoomService,
     ) {
       this.users$ = this.userService.users$;
-      this.filteredUsernames$ = this.userService.getFilteredUsernames(this.roomForm.get('member') as AbstractControl<any>);
+      this.filteredUsernames$ = this.userService.getFilteredUsernames(this.roomForm.get('member') as AbstractControl);
     }
 
   ngOnInit(): void {}
 
-  createForm(model: RoomForm) {
-    let formGroup = this.formBuilder.group(model);
-    formGroup.get('name')?.addValidators([Validators.required]);
-    formGroup.get('password')?.addValidators([Validators.minLength(4)]);
-    return formGroup;
-  }
-
-  add(event: MatChipInputEvent, users: User[]): void {
+  public add(event: MatChipInputEvent, users: User[]): void {
     const value = event.value;
 
     // Add our member
@@ -72,28 +60,27 @@ export class CreateRoomComponent implements OnInit {
     this.roomForm.get('member')?.setValue(null);
   }
 
-  selected(event: MatAutocompleteSelectedEvent, users: User[]): void {
+  public selected(event: MatAutocompleteSelectedEvent, users: User[]): void {
     const user = users.find(user => user.username === event.option.viewValue) as User;
     this.selectedUsers.add(user);
     (this.memberInput as ElementRef<HTMLInputElement>).nativeElement.value = '';
     this.roomForm.get('member')?.setValue(null);
   }
 
-  removeChip(member: User){
+  public removeChip(member: User){
     const index = this.selectedUsers.delete(member);
   }
 
-  onSubmit(){
+  public onSubmit(){
     if(this.roomForm.valid){
-      this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenGroup as string).then(() => { 
-        this.snackBar.open(
-          this.translate.instant('CREATE_ROOM.CREATED'), 
-          this.translate.instant('COMMON.GREAT'), 
-          {duration: 2000});
-        this.router.navigateByUrl('/main');
-      }).catch(error => {
-        console.log(error);
-      });
+      this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenGroup as string);
     }
+  }
+
+  private createForm(model: RoomForm) {
+    let formGroup = this.formBuilder.group(model);
+    formGroup.get('name')?.addValidators([Validators.required]);
+    formGroup.get('password')?.addValidators([Validators.minLength(4)]);
+    return formGroup;
   }
 }
