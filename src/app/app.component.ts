@@ -3,6 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { SessionService } from './shared/services/session.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    public readonly translate: TranslateService
+    public readonly translate: TranslateService,
+    public readonly sessionService: SessionService
   ){
     translate.addLangs(['en', 'hu']);
     translate.setDefaultLang('en');
@@ -26,7 +28,7 @@ export class AppComponent implements OnInit {
     const browserLang = translate.getBrowserLang() as string;
     translate.use(browserLang.match(/en|hu/) ? browserLang : 'en');
 
-    this.loggedInUser = this.authService.loggedInUser$;
+    this.loggedInUser = this.sessionService.currentUser$;
   }
 
   ngOnInit() : void {

@@ -2,37 +2,32 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import firebase from 'firebase/compat/app'; 
-import { BehaviorSubject, ReplaySubject, share } from 'rxjs';
+import { ReplaySubject, share } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private keepAlive?: any;
-
-  public loggedInUser$: BehaviorSubject<string> = new BehaviorSubject('');
-
   constructor(
     private readonly auth: AngularFireAuth,
     private readonly userService: UserService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly sessionService: SessionService
     ) {
       this.isUserLoggedIn().subscribe({
         next: (user) => {
           if(user !== null) {
             console.log(user?.uid);
-            this.loggedInUser$.next(user?.uid);
-            localStorage.setItem('user', JSON.stringify(user?.uid).slice(1, -1));
-            this.startKeepAlive();
+            this.sessionService.setUser(user?.uid);
           }
         }, 
         error: (e) => {
           console.log(e);
-          localStorage.removeItem('user');
-          this.stopKeepAlive();
+          this.sessionService.clearUser();
         }
       });
     }
@@ -66,24 +61,10 @@ export class AuthService {
 
   public logout() : void{
     this.auth.signOut().then(() => {
-        localStorage.removeItem('user');
-        this.loggedInUser$.next('');
+        this.sessionService.clearUser();
         this.router.navigateByUrl('/login');
-        this.stopKeepAlive();
     }).catch(error => {
       console.log(error);
     });
-  }
-
-  public startKeepAlive(){
-    const user = localStorage.getItem('user');
-    this.userService.updateTime(user as string, new Date().getTime());
-    this.keepAlive = setInterval(() => {
-      this.userService.updateTime(user as string, new Date().getTime());
-    }, 60000);
-  }
-
-  public stopKeepAlive(){
-    clearInterval(this.keepAlive);
   }
 }
