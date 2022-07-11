@@ -4,9 +4,8 @@ import { debounceTime, map, Observable, ReplaySubject, share, startWith, switchM
 import { User } from '../models/User';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { UserCredential } from '@angular/fire/auth';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from './toast.service';
 
 
 @Injectable({
@@ -14,54 +13,27 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UserService {
 
-  collectionName = 'Users';
+  private collectionName = 'Users';
 
-  users$: Observable<User[]>;
+  public users$: Observable<User[]>;
 
   constructor(
-    private afs: AngularFirestore,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private translate: TranslateService
+    private readonly afs: AngularFirestore,
+    private readonly toast: ToastService,
+    private readonly router: Router
     ) {
     this.users$ = this.getAll();
   }
 
-  create(user: User) {
+  public create(user: User) : Promise<void> {
     return this.afs.collection<User>(this.collectionName).doc(user.id).set(user);
   }
 
-  getAll() {
-    return this.afs.collection<User>(this.collectionName).valueChanges().pipe(
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      })
-    );
-  }
-
-  getById(id: string) {
-    return this.afs.collection<User>(this.collectionName).doc(id).valueChanges().pipe(
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      })
-    );
-  }
-
-  update(user: User) {
-    return this.afs.collection<User>(this.collectionName).doc(user.id).set(user);
-  }
-
-  updateTime(id: string, date: number){
+  public updateTime(id: string, date: number) : void {
     this.afs.collection<User>(this.collectionName).doc(id).update({last_active: date});
   }
 
-  delete(id: string) {
-    return this.afs.collection<User>(this.collectionName).doc(id).delete();
-  }
-
-  getFilteredUsernames(field: AbstractControl): Observable<string[]>{
+  public getFilteredUsernames(field: AbstractControl): Observable<string[]>{
     return field.valueChanges.pipe(
       startWith(null),
       debounceTime(500),
@@ -75,23 +47,8 @@ export class UserService {
     );
   }
 
-  _filter(searchValue: string): Observable<string[]> {
-    const filterValue = searchValue.toLowerCase();
-
-    return this.users$.pipe(
-      map(users => users
-        .map(user => user.username)
-        .filter(username => username.toLowerCase().includes(filterValue))
-      ),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: true
-      })
-    )
-  }
-
   //For Google login method
-  createNonExistingUser(cred: UserCredential){
+  public createNonExistingUser(cred: UserCredential): void {
     this.getById(cred.user.uid).pipe(take(1)).subscribe(data => {
       if(!data){
         const user : User = {
@@ -106,10 +63,11 @@ export class UserService {
         };  
         this.createUser(user);
       }
+      this.router.navigateByUrl('/main');
     });
   }
 
-  createUserFromForm(form: FormGroup, cred: UserCredential) {
+  public createUserFromForm(form: FormGroup, cred: UserCredential): void {
     const user : User = {
       id: cred.user?.uid as string,
       email: form.get('email')?.value as string,
@@ -123,16 +81,46 @@ export class UserService {
     this.createUser(user);
   }
 
-  createUser(user: User) {
+  private getAll() : Observable<User[]> {
+    return this.afs.collection<User>(this.collectionName).valueChanges().pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
+  }
+
+  private getById(id: string) : Observable<User | undefined> {
+    return this.afs.collection<User>(this.collectionName).doc(id).valueChanges().pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      })
+    );
+  }
+
+  private createUser(user: User): void {
     this.create(user).then(_ => {
-      this.snackBar.open(
-        this.translate.instant('LOGIN_REGISTER.CREATED'), 
-        this.translate.instant('COMMON.GREAT'),
-        {duration: 2000});
+      this.toast.createSnackBar('LOGIN_REGISTER.CREATED', 'COMMON.GREAT');
       this.router.navigateByUrl('/main');
     }).catch(error => {
       console.log(error);
     });
+  }
+
+  private _filter(searchValue: string): Observable<string[]> {
+    const filterValue = searchValue.toLowerCase();
+
+    return this.users$.pipe(
+      map(users => users
+        .map(user => user.username)
+        .filter(username => username.toLowerCase().includes(filterValue))
+      ),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: true
+      })
+    )
   }
   
 }
