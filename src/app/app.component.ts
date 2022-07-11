@@ -13,27 +13,23 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  title = 'drugstore-app';
-  selectedLang: string = '';
+  public selectedLang: string = '';
 
-  loggedInUser?: string;
+  public loggedInUser?: string;
 
-  authSubscription?: Subscription;
+  private authSubscription: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    public translate: TranslateService
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    public readonly translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
     translate.setDefaultLang('en');
 
     const browserLang = translate.getBrowserLang() as string;
     translate.use(browserLang.match(/en|hu/) ? browserLang : 'en');
-  }
 
-  ngOnInit(){
-    this.selectedLang = this.translate.currentLang;
     this.authSubscription = this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
         if(user !== null) {
@@ -41,34 +37,40 @@ export class AppComponent implements OnInit, OnDestroy {
           localStorage.setItem('user', JSON.stringify(this.loggedInUser).slice(1, -1));
           this.authService.startKeepAlive();
         }
-    }, 
-    error: (e) => {
-      console.log(e);
-      localStorage.removeItem('user');
-      this.authService.stopKeepAlive();
-    }});
+      }, 
+      error: (e) => {
+        console.log(e);
+        localStorage.removeItem('user');
+        this.authService.stopKeepAlive();
+      }
+    });
+  }
+
+  ngOnInit() : void {
+    this.selectedLang = this.translate.currentLang;
+    
   }
 
   ngOnDestroy(): void {
-    this.authSubscription?.unsubscribe();
+    this.authSubscription.unsubscribe();
   }
 
-  onToggleSideNav(sidenav : MatSidenav){
+  public onToggleSideNav(sidenav : MatSidenav) : void {
     sidenav.toggle();
   }
 
-  onClose(event: any, sidenav: MatSidenav){
+  public onClose(event: any, sidenav: MatSidenav) : void {
     if (event === true){
       sidenav.close();
     }
   }
 
-  switchLanguage(value: string){
+  public switchLanguage(value: string) : void{
     this.selectedLang = value;
     this.translate.use(value);
   }
 
-  logout(_?: boolean){
+  public logout(_?: boolean) : void{
     this.authService.logout().then(() => {
       this.loggedInUser = '';
       this.router.navigateByUrl('/login');
