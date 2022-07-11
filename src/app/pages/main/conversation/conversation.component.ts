@@ -1,15 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, ReplaySubject, share, Subscription, take } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
 import { Message } from '../../../shared/models/Message';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-conversation',
@@ -18,18 +15,18 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ConversationComponent implements OnInit, OnDestroy {
 
-  convoType?: string;
-  convoId?: string;
-  loggedInUser: string = localStorage.getItem('user') as string;
+  private queryParamSubscription?: Subscription;
+  private dialogSubscription?: Subscription;
 
-  messages$?: Observable<Message[]>;
-  users$: Observable<User[]>;
-  roomName$?: Observable<string | undefined>;
+  public convoType?: string;
+  public convoId?: string;
+  public loggedInUser: string = localStorage.getItem('user') as string;
 
-  queryParamSubscription?: Subscription;
-  dialogSubscription?: Subscription;
+  public messages$?: Observable<Message[]>;
+  public users$: Observable<User[]>;
+  public roomName$?: Observable<string | undefined>;
 
-  messageForm = this.formBuilder.group({
+  public messageForm = this.formBuilder.group({
     id: '',
     content: '',
     sender_id: this.loggedInUser,
@@ -39,14 +36,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private route: ActivatedRoute,
-    private roomService: RoomService,
-    private messageService: MessageService,
-    public userService: UserService,
-    private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    public translate: TranslateService
+    private readonly route: ActivatedRoute,
+    private readonly roomService: RoomService,
+    private readonly messageService: MessageService,
+    private readonly userService: UserService,
+    private readonly formBuilder: FormBuilder
   ) { 
     this.users$ = this.userService.users$;
   }
@@ -68,36 +62,25 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this.dialogSubscription?.unsubscribe();
   }
 
-  loadMessages(convoType?: string, convoId?: string){
+  private loadMessages(convoType?: string, convoId?: string){
     convoId = convoId as string;
     if(convoType === 'personal'){
       this.messages$ = this.messageService.getPersonalMessages(convoId, (localStorage.getItem('user') as string));
     } else {
-      this.roomName$ = this.roomService.getById(convoId).pipe(
-        map(room => room?.name),
-        share({
-          connector: () => new ReplaySubject(1),
-          resetOnRefCountZero: false
-        })
-      );
+      this.roomName$ = this.roomService.getRoomNameById(convoId);
       this.messages$ = this.messageService.getMessagesforRoom(convoId);
     }
   }
 
-  sendMessage(){
+  public sendMessage(){
     this.messageService.sendMessage(this.messageForm);
   }
 
-  deleteMessage(message: Message){
-    this.messageService.delete(message.id).then(() => {
-      this.snackBar.open(
-        this.translate.instant('CONVERSATION.DELETED'), 
-        this.translate.instant('COMMON.OK'), 
-        {duration: 2000});
-    });
+  public deleteMessage(message: Message){
+    this.messageService.delete(message.id);
   }
 
-  openEditDialog(message: Message){
+  public openEditDialog(message: Message){
     this.messageService.openEditDialog(message);
   }
 
