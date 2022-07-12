@@ -14,8 +14,7 @@ import { UserService } from '../../../shared/services/user.service';
   styleUrls: ['./conversation.component.scss']
 })
 export class ConversationComponent implements OnInit, OnDestroy {
-
-  private queryParamSubscription?: Subscription;
+  
   private dialogSubscription?: Subscription;
 
   public convoType?: string;
@@ -46,7 +45,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.queryParamSubscription = this.route.queryParamMap.pipe(take(1)).subscribe(result => {
+    this.route.queryParamMap.pipe(take(1)).subscribe(result => {
         this.convoType = result.get('type') as string;
         this.convoId = result.get('id') as string; 
 
@@ -58,7 +57,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.queryParamSubscription?.unsubscribe();
     this.dialogSubscription?.unsubscribe();
   }
 

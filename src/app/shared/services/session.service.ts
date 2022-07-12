@@ -17,10 +17,9 @@ export class SessionService {
 
   //After logging in
   public setUser(uid: string) : void {
-    const id : string = JSON.stringify(uid).slice(1, -1);
-    localStorage.setItem('user', id);
-    this.currentUser$.next(id);
-    this._startKeepAlive(id);
+    localStorage.setItem('user', uid);
+    this.currentUser$.next(uid);
+    this._startKeepAlive(uid);
   }
 
   //After logging out
