@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SessionService } from './shared/services/session.service';
 
 @Component({
@@ -11,7 +11,9 @@ import { SessionService } from './shared/services/session.service';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+
+  private sessionSubscription: Subscription;
 
   public selectedLang: string = '';
 
@@ -28,12 +30,28 @@ export class AppComponent implements OnInit {
     const browserLang = translate.getBrowserLang() as string;
     translate.use(browserLang.match(/en|hu/) ? browserLang : 'en');
 
+    this.sessionSubscription = this.authService.isUserLoggedIn().subscribe({
+      next: (user) => {
+        if(user !== null) {
+          console.log(user?.uid);
+          this.sessionService.setUser(user?.uid);
+        }
+      }, 
+      error: (e) => {
+        console.log(e);
+        this.sessionService.clearUser();
+      }
+    });
+
     this.loggedInUser = this.sessionService.currentUser$;
   }
 
   ngOnInit() : void {
-    this.selectedLang = this.translate.currentLang;
-    
+    this.selectedLang = this.translate.currentLang; 
+  }
+
+  ngOnDestroy(): void {
+    this.sessionSubscription.unsubscribe();
   }
 
   public onToggleSideNav(sidenav : MatSidenav) : void {

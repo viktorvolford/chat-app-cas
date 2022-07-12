@@ -17,20 +17,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly router: Router,
     private readonly sessionService: SessionService
-    ) {
-      this.isUserLoggedIn().subscribe({
-        next: (user) => {
-          if(user !== null) {
-            console.log(user?.uid);
-            this.sessionService.setUser(user?.uid);
-          }
-        }, 
-        error: (e) => {
-          console.log(e);
-          this.sessionService.clearUser();
-        }
-      });
-    }
+    ) {}
 
   public login(email: string, password: string){
     return this.auth.signInWithEmailAndPassword(email, password);
