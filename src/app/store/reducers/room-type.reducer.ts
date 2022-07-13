@@ -3,7 +3,7 @@ import {
     setRoomType
 } from '../actions/room-type.actions';
 
-export const initialState = '';
+export const initialState = 'public';
 
 export const roomTypeReducer = createReducer(
     initialState,
