@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, distinctUntilChanged, Observable, ReplaySubject, share, take } from 'rxjs';
@@ -8,18 +8,20 @@ import { Message } from '../../../shared/models/Message';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { select, Store } from '@ngrx/store';
-import { AppState } from 'src/app/store/models/app.state';
-import { selectUserSession } from 'src/app/store/selectors/user-session.selector';
+import { AppState } from '../../../store/models/app.state';
+import { selectUserSession } from '../../../store/selectors/user-session.selector';
+import { selectConvoId, selectConvoType } from '../../../store/selectors/convo.selector';
+import { setConvoId, setConvoType } from '../../../store/actions/convo.actions';
 
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss']
 })
-export class ConversationComponent implements OnInit {
+export class ConversationComponent {
 
-  public convoType?: string;
-  public convoId?: string;
+  public convoType$: Observable<string>;
+  public convoId$: Observable<string>;
   public loggedInUser$: Observable<string>;
 
   public messages$?: Observable<Message[]>;
@@ -51,31 +53,41 @@ export class ConversationComponent implements OnInit {
       }),
       distinctUntilChanged()
     );
+    this.convoType$ = this.store.pipe(
+      select(selectConvoType),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      }),
+      distinctUntilChanged()
+    );
+    this.convoId$ = this.store.pipe(
+      select(selectConvoId),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      }),
+      distinctUntilChanged()
+    );
     this.users$ = this.userService.users$;
-  }
 
-  ngOnInit(): void {
-    const queryParamMap$ = this.route.queryParamMap.pipe(take(1));
-
-    combineLatest([queryParamMap$, this.loggedInUser$]).pipe(take(1)).subscribe(data => {
+    combineLatest([this.route.queryParamMap, this.loggedInUser$]).pipe(take(1)).subscribe(data => {
       const [paramMap, user] = data;
-
-      this.convoType = paramMap.get('type') as string;
-      this.convoId = paramMap.get('id') as string; 
-
-      this.messageForm.get('type')?.setValue(this.convoType);
+      const convoType = paramMap.get('type') as string;
+      const convoId = paramMap.get('id') as string;
+      this.store.dispatch(setConvoType({convoType}));
+      this.store.dispatch(setConvoId({convoId}));
+      this.messageForm.get('type')?.setValue(convoType);
       this.messageForm.get('sender_id')?.setValue(user);
-      this.messageForm.get('target_id')?.setValue(this.convoId);
-
-      this.loadMessages(this.convoType, this.convoId);
+      this.messageForm.get('target_id')?.setValue(convoId);
+      this._loadMessages(convoType, convoId);
     });
   }
 
-  private loadMessages(convoType?: string, convoId?: string) : void {
-    convoId = convoId as string;
+  private _loadMessages(convoType: string, convoId: string) : void {
     if(convoType === 'personal'){
       this.loggedInUser$.pipe(take(1)).subscribe(user => {
-        this.messages$ = this.messageService.getPersonalMessages(convoId as string, user);
+        this.messages$ = this.messageService.getPersonalMessages(convoId, user);
       });
     } else {
       this.roomName$ = this.roomService.getRoomNameById(convoId);

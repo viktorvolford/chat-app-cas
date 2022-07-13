@@ -1,6 +1,6 @@
 <div class="main_container" *ngIf="users$ | async as users">
-    <ng-container [ngSwitch]="convoType">
-        <h1 class="target_name" *ngSwitchCase="'personal'">{{ convoId | fullName:users }}</h1>
+    <ng-container [ngSwitch]="convoType$ | async">
+        <h1 class="target_name" *ngSwitchCase="'personal'">{{ (convoId$ | async) | fullName:users }}</h1>
         <h1 class="target_name" *ngSwitchCase="'room'">{{ roomName$ | async }}</h1>
     </ng-container>
     <div class="message_container">
