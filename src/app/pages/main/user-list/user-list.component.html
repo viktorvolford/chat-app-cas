@@ -3,7 +3,7 @@
     <span class="username">
         <div>
             <b>{{user.username}}</b>
-            <span class="you" *ngIf="user.id === loggedInUser">({{ 'MAIN.YOU' | translate }})</span> 
+            <span class="you" *ngIf="user.id === (loggedInUser$ | async)">({{ 'MAIN.YOU' | translate }})</span> 
         </div>
     </span>
     <span class="activity-indicator">

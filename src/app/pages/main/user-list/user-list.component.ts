@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { distinctUntilChanged, Observable, ReplaySubject, share } from 'rxjs';
+import { AppState } from 'src/app/store/models/app.state';
+import { selectUserSession } from 'src/app/store/selectors/user-session.selector';
 import { User } from '../../../shared/models/User';
 import { UserService } from '../../../shared/services/user.service';
 
@@ -10,19 +13,26 @@ import { UserService } from '../../../shared/services/user.service';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
 
-  public loggedInUser?: string;
+  public loggedInUser$: Observable<string>;
   public users$?: Observable<User[]>;
 
   constructor(
-    private userService: UserService,
-    private router: Router,
-  ) { }
+    private readonly userService: UserService,
+    private readonly router: Router,
+    private readonly store: Store<AppState>
+  ) {
+    this.loggedInUser$ = this.store.pipe(
+      select(selectUserSession),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      }),
+      distinctUntilChanged()
+    );
 
-  ngOnInit(): void {
     this.users$ = this.userService.users$;
-    this.loggedInUser = localStorage.getItem('user') as string;
   }
 
   public openConversation(id: string){
