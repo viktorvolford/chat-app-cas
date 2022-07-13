@@ -12,7 +12,7 @@
             </mat-button-toggle-group>
         </div>
         
-        <app-room-list [chosenVisibility]="this.chosenVisibility"></app-room-list>
+        <app-room-list [chosenVisibility]="chosenVisibility$ | async"></app-room-list>
     </div>
 </div>
 

@@ -3,9 +3,11 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, map, Observable, ReplaySubject, share, switchMap, take } from 'rxjs';
-import { AppState } from 'src/app/store/models/app.state';
-import { selectUserSession } from 'src/app/store/selectors/user-session.selector';
+import { combineLatest, distinctUntilChanged, map, Observable, ReplaySubject, share, switchMap, take, tap } from 'rxjs';
+import { selectRoomType } from 'src/app/store/selectors/room-type.selector';
+import { loadRooms } from '../../store/actions/rooms.actions';
+import { AppState } from '../../store/models/app.state';
+import { selectUserSession } from '../../store/selectors/user-session.selector';
 import { Room } from '../models/Room';
 import { User } from '../models/User';
 import { ToastService } from './toast.service';
@@ -17,6 +19,8 @@ export class RoomService {
 
   private collectionName = 'Rooms';
   private user$: Observable<string>;
+  private type$: Observable<string>;
+  public rooms$: Observable<Room[]>
 
   constructor(
     private readonly afs: AngularFirestore,
@@ -32,28 +36,33 @@ export class RoomService {
       }),
       distinctUntilChanged()
     );
-  }
 
-  public getRooms(type: string) : Observable<Room[]> {
-    return this.user$.pipe(
-      switchMap(user =>
-        {
-          if(type === 'public'){
-            return this.getPublicRooms();
-          }
-          else if(type === 'private'){
-            return this.getPrivateRooms(user);
-          }
-          else{
-            return this.getProtectedRooms();
-          }
-        }
-      ),
+    this.type$ = this.store.pipe(
+      select(selectRoomType),
       share({
         connector: () => new ReplaySubject(1),
         resetOnRefCountZero: false
-      })
+      }),
+      distinctUntilChanged()
     );
+
+    this.rooms$ = combineLatest([this.user$, this.type$]).pipe(
+      switchMap(data => {
+        const [user, convoType] = data;
+        let rooms$: Observable<Room[]>;
+        if(convoType === 'public'){
+          rooms$ = this.getPublicRooms();
+        }
+        else if(convoType === 'private'){
+          rooms$ = this.getPrivateRooms(user);
+        }
+        else{
+          rooms$ = this.getProtectedRooms();
+        }
+        return rooms$;
+      }),
+      tap(rooms => this.store.dispatch(loadRooms({rooms}))),
+    )
   }
 
   public getRoomNameById(id: string) : Observable<string> {

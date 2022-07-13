@@ -15,7 +15,7 @@ export class RoomBoxComponent implements OnInit {
 
   @Input() public room?: Room;
   @Input() public users: User[] = [];
-  @Input() public chosenVisibility: string = '';
+  @Input() public chosenVisibility: string | null = '';
   @Input() public isEven?: Boolean;
 
   constructor() { }

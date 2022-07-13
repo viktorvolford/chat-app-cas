@@ -17,7 +17,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 })
 export class RoomListComponent implements OnChanges {
 
-  @Input() public chosenVisibility: string = '';
+  @Input() public chosenVisibility: string | null = '';
 
   public rooms$? : Observable<Room[]>;
   public users$? : Observable<User[]>;
@@ -31,7 +31,7 @@ export class RoomListComponent implements OnChanges {
     ) { }
 
   ngOnChanges(): void {
-    this.rooms$ = this.roomService.getRooms(this.chosenVisibility as string);
+    this.rooms$ = this.roomService.rooms$;
     this.users$ = this.userService.users$;
   }
 

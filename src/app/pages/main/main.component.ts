@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { setRoomType } from 'src/app/store/actions/room-type.actions';
+import { selectRoomType } from 'src/app/store/selectors/room-type.selector';
+import { AppState } from '../../store/models/app.state';
 
 @Component({
   selector: 'app-main',
@@ -6,17 +11,15 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
 
-  public chosenVisibility: string = 'public';
+  public chosenVisibility$: Observable<string>;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private readonly store: Store<AppState>) {
+    this.chosenVisibility$ = this.store.pipe(select(selectRoomType));
   }
 
-  public onToggleChange(value: string): void {
-    this.chosenVisibility = value;
+  public onToggleChange(roomType: string): void {
+    this.store.dispatch(setRoomType({roomType}));
   }
-
 }
