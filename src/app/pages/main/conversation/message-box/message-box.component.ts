@@ -11,7 +11,7 @@ import { Message } from '../../../../shared/models/Message';
 export class MessageBoxComponent implements OnInit {
 
   @Input() message? : Message;
-  @Input() loggedInUser : string = '';
+  @Input() loggedInUser : string | null = '';
   @Input() users : User[] = [];
 
   @Output() deleteMessage: EventEmitter<Message> = new EventEmitter();

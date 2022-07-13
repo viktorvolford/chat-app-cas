@@ -6,7 +6,7 @@
     <div class="message_container">
         <app-message-box *ngFor="let message of messages$ | async; let i = index;" 
             [message]="message" 
-            [loggedInUser]="loggedInUser" 
+            [loggedInUser]="loggedInUser$ | async" 
             [users]="users" 
             (deleteMessage)="deleteMessage($event)" 
             (editMessage)="openEditDialog($event)">
