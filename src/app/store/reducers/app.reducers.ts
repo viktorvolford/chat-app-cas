@@ -1,7 +1,7 @@
 import { ActionReducerMap } from "@ngrx/store";
 import { AppState } from "../models/app.state";
-import { convoTypeReducer } from "./convo.reducer";
-import { convoIdReducer } from "./convo.reducer";
+import { convoTypeReducer } from "./convo.reducers";
+import { convoIdReducer } from "./convo.reducers";
 import { roomTypeReducer } from "./room-type.reducer";
 import { roomsReducer } from "./rooms.reducer";
 import { userSessionReducer } from "./user-session.reducer";
