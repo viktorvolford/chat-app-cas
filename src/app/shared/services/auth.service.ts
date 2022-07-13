@@ -5,7 +5,6 @@ import firebase from 'firebase/compat/app';
 import { ReplaySubject, share } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +14,7 @@ export class AuthService {
   constructor(
     private readonly auth: AngularFireAuth,
     private readonly userService: UserService,
-    private readonly router: Router,
-    private readonly sessionService: SessionService
+    private readonly router: Router
     ) {}
 
   public login(email: string, password: string){
@@ -48,7 +46,6 @@ export class AuthService {
 
   public logout() : void{
     this.auth.signOut().then(() => {
-        this.sessionService.clearUser();
         this.router.navigateByUrl('/login');
     }).catch(error => {
       console.log(error);

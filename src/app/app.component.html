@@ -1,6 +1,6 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav>
-        <ng-container *ngIf="{user: loggedInUser | async} as loggedInUser">
+        <ng-container *ngIf="{user: loggedInUser$ | async} as loggedInUser">
             <app-menu [loggedInUser]="loggedInUser.user" [selectedLang]="selectedLang" (onSwitchLanguage)="switchLanguage($event)" (onCloseSidenav)="onClose($event, sidenav)" (onLogout)="logout()"></app-menu>
         </ng-container>
     </mat-sidenav>
@@ -15,7 +15,7 @@
                 <a [routerLink]="['/']">Chat App</a>
             </div>
             <div class="navbar">
-                <ul class="navigation-items" *ngIf="{user: loggedInUser | async} as loggedInUser">
+                <ul class="navigation-items" *ngIf="{user: loggedInUser$ | async} as loggedInUser">
                     <li *ngIf="loggedInUser.user"><a routerLink="/login" (click)="logout()">{{ 'MENU.LOGOUT' | translate }}</a></li>
                     <li *ngIf="!(loggedInUser.user)"><a routerLink="/login">{{ 'MENU.LOGIN' | translate }}</a></li>
                     <li *ngIf="!(loggedInUser.user)"><a routerLink="/signup">{{ 'MENU.REGISTER' | translate }}</a></li>

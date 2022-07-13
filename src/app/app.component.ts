@@ -4,6 +4,10 @@ import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { SessionService } from './shared/services/session.service';
+import { select, Store } from '@ngrx/store';
+import { AppState } from './store/models/app.state';
+import { login, logout } from './store/actions/user-session.actions';
+import { selectUserSession } from './store/selectors/user-session.selector';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +21,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public selectedLang: string = '';
 
-  public loggedInUser: Observable<string>;
+  public loggedInUser$: Observable<string>;
 
   constructor(
     private readonly authService: AuthService,
-    public readonly translate: TranslateService,
-    public readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly store: Store<AppState>,
+    public readonly translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
     translate.setDefaultLang('en');
@@ -32,18 +37,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.sessionSubscription = this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
-        if(user !== null) {
-          console.log(user?.uid);
-          this.sessionService.setUser(user?.uid);
+        if(user?.uid)
+        {
+          this.store.dispatch(login({id: user?.uid as string}));
+        } else {
+          this.store.dispatch(logout());
         }
+        this.sessionService.setUser(user?.uid as string);
       }, 
       error: (e) => {
         console.log(e);
-        this.sessionService.clearUser();
       }
     });
 
-    this.loggedInUser = this.sessionService.currentUser$;
+    this.loggedInUser$ = this.store.pipe(select(selectUserSession));
   }
 
   ngOnInit() : void {
