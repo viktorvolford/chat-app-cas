@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
-import { combineLatest, map, of, ReplaySubject, share, switchMap, take } from 'rxjs';
+import { combineLatest, map, of, ReplaySubject, share, switchMap, tap } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from '../../pages/main/conversation/edit-dialog/edit-dialog.component';
 import { ToastService } from './toast.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/models/app.state';
+import { loadMessages } from 'src/app/store/actions/messages.actions';
 
 @Injectable()
 export class MessageService {
@@ -15,7 +18,8 @@ export class MessageService {
   constructor(
     private readonly afs: AngularFirestore,
     private readonly dialog: MatDialog,
-    private readonly toast: ToastService
+    private readonly toast: ToastService,
+    private readonly store: Store<AppState>
     ) { }
 
   public getMessagesforRoom(id: string) {
@@ -24,6 +28,7 @@ export class MessageService {
       .where('target_id', '==', id)
       .orderBy('date', 'asc'))
       .valueChanges().pipe(
+        tap(messages => this.store.dispatch(loadMessages({messages}))),
         share({
           connector: () => new ReplaySubject(1),
           resetOnRefCountZero: false
@@ -55,6 +60,7 @@ export class MessageService {
           return of(combined);
         }),
         map(messages => messages.sort((a, b) => a.date > b.date ? 1 : a.date < b.date ? -1 : 0)),
+        tap(messages => this.store.dispatch(loadMessages({messages}))),
         share({
           connector: () => new ReplaySubject(1),
           resetOnRefCountZero: false
