@@ -30,6 +30,7 @@ import { SnackbarComponent } from './shared/components/snackbar/snackbar.compone
 import { StoreModule } from '@ngrx/store';
 import { appReducers } from './store/reducers/app.reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -69,7 +70,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     StoreModule.forRoot(appReducers),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent]
