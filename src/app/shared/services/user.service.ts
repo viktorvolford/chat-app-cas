@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { debounceTime, map, Observable, ReplaySubject, share, startWith, switchMap, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, ReplaySubject, share, startWith, switchMap, take, tap } from 'rxjs';
 import { User } from '../models/User';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
-
+import { loadUsers } from '../../store/actions/users.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/models/app.state';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +22,17 @@ export class UserService {
   constructor(
     private readonly afs: AngularFirestore,
     private readonly toast: ToastService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store<AppState>
     ) {
-    this.users$ = this.getAll();
+    this.users$ = this.getAll().pipe(
+      tap(users => this.store.dispatch(loadUsers({users}))),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      }),
+      distinctUntilChanged()
+    );
   }
 
   public create(user: User) : Promise<void> {
@@ -43,7 +53,8 @@ export class UserService {
       share({
         connector: () => new ReplaySubject(1),
         resetOnRefCountZero: false
-      })
+      }),
+      distinctUntilChanged()
     );
   }
 

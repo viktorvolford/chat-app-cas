@@ -12,6 +12,8 @@ import { AppState } from '../../../store/models/app.state';
 import { selectUserSession } from '../../../store/selectors/user-session.selector';
 import { selectConvoId, selectConvoType } from '../../../store/selectors/convo.selector';
 import { setConvoId, setConvoType } from '../../../store/actions/convo.actions';
+import { selectUsers } from 'src/app/store/selectors/users.selector';
+import { SessionService } from 'src/app/shared/services/session.service';
 
 @Component({
   selector: 'app-conversation',
@@ -41,18 +43,14 @@ export class ConversationComponent {
     private readonly route: ActivatedRoute,
     private readonly roomService: RoomService,
     private readonly messageService: MessageService,
+    private readonly sessionService: SessionService,
     private readonly userService: UserService,
     private readonly formBuilder: FormBuilder,
     private readonly store: Store<AppState>
   ) { 
-    this.loggedInUser$ = this.store.pipe(
-      select(selectUserSession),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      }),
-      distinctUntilChanged()
-    );
+    this.loggedInUser$ = this.sessionService.user$;
+    this.users$ = this.userService.users$;
+
     this.convoType$ = this.store.pipe(
       select(selectConvoType),
       share({
@@ -69,7 +67,6 @@ export class ConversationComponent {
       }),
       distinctUntilChanged()
     );
-    this.users$ = this.userService.users$;
 
     combineLatest([this.route.queryParamMap, this.loggedInUser$]).pipe(take(1)).subscribe(data => {
       const [paramMap, user] = data;

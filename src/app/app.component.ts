@@ -1,13 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { SessionService } from './shared/services/session.service';
-import { select, Store } from '@ngrx/store';
-import { AppState } from './store/models/app.state';
-import { login, logout } from './store/actions/user-session.actions';
-import { selectUserSession } from './store/selectors/user-session.selector';
 
 @Component({
   selector: 'app-root',
@@ -15,18 +11,16 @@ import { selectUserSession } from './store/selectors/user-session.selector';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
 
   private sessionSubscription: Subscription;
 
-  public selectedLang: string = '';
-
+  public selectedLang: string;
   public loggedInUser$: Observable<string>;
 
   constructor(
     private readonly authService: AuthService,
     private readonly sessionService: SessionService,
-    private readonly store: Store<AppState>,
     public readonly translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
@@ -37,12 +31,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.sessionSubscription = this.authService.isUserLoggedIn().subscribe({
       next: (user) => {
-        if(user?.uid)
-        {
-          this.store.dispatch(login({id: user?.uid as string}));
-        } else {
-          this.store.dispatch(logout());
-        }
         this.sessionService.setUser(user?.uid as string);
       }, 
       error: (e) => {
@@ -50,11 +38,8 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.loggedInUser$ = this.store.pipe(select(selectUserSession));
-  }
-
-  ngOnInit() : void {
-    this.selectedLang = this.translate.currentLang; 
+    this.loggedInUser$ = this.sessionService.user$;
+    this.selectedLang = this.translate.currentLang;
   }
 
   ngOnDestroy(): void {
@@ -76,7 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.translate.use(value);
   }
 
-  public logout(_?: boolean) : void{
+  public logout() : void{
     this.authService.logout();
   }
 }

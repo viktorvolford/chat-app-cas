@@ -7,9 +7,9 @@ import { combineLatest, distinctUntilChanged, map, Observable, ReplaySubject, sh
 import { selectRoomType } from 'src/app/store/selectors/room-type.selector';
 import { loadRooms } from '../../store/actions/rooms.actions';
 import { AppState } from '../../store/models/app.state';
-import { selectUserSession } from '../../store/selectors/user-session.selector';
 import { Room } from '../models/Room';
 import { User } from '../models/User';
+import { SessionService } from './session.service';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -26,16 +26,10 @@ export class RoomService {
     private readonly afs: AngularFirestore,
     private readonly toast: ToastService,
     private readonly router: Router,
+    private readonly sessionService: SessionService,
     private readonly store: Store<AppState>
   ) {
-    this.user$ = this.store.pipe(
-      select(selectUserSession),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      }),
-      distinctUntilChanged()
-    );
+    this.user$ = this.sessionService.user$;
 
     this.type$ = this.store.pipe(
       select(selectRoomType),
@@ -62,12 +56,17 @@ export class RoomService {
         return rooms$;
       }),
       tap(rooms => this.store.dispatch(loadRooms({rooms}))),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnRefCountZero: false
+      }),
+      distinctUntilChanged()
     )
   }
 
   public getRoomNameById(id: string) : Observable<string> {
-    return this.afs.collection<Room>(this.collectionName).doc(id).valueChanges().pipe(
-      map(room => room?.name as string),
+    return this.rooms$.pipe(
+      map(rooms => (rooms.find(room => room.id === id) as Room).name),
       share({
         connector: () => new ReplaySubject(1),
         resetOnRefCountZero: false
