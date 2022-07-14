@@ -1,3 +1,4 @@
+import { Message } from "../../shared/models/Message";
 import { Room } from "../../shared/models/Room";
 import { User } from "../../shared/models/User";
 
@@ -7,6 +8,7 @@ export interface AppState {
     convoType: string,
     convoId: string,
     users: User[],
-    rooms: Room[]
+    rooms: Room[],
+    messages: Message[]
 }
   
