@@ -1,18 +1,25 @@
 <div class="main_container">
-    <div class="user_list_container">
-        <app-user-list></app-user-list>
-    </div>
-    <div class="room_list_container">
-        <h1>{{ 'MAIN.CHATROOMS' | translate }}</h1>
-        <div class="toggle">
-            <mat-button-toggle-group name="visibility" aria-label="Visibility" value="public" (change)="onToggleChange($event.source.value)">
-                <mat-button-toggle value="public">{{ 'COMMON.PUBLIC' | translate }}</mat-button-toggle>
-                <mat-button-toggle value="private">{{ 'COMMON.PRIVATE' | translate }}</mat-button-toggle>
-                <mat-button-toggle value="protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-button-toggle>
-            </mat-button-toggle-group>
+    <ng-container *ngIf="{userList: users$ | async} as users">
+        <div class="user_list_container">
+            <app-user-list [users]="users.userList"></app-user-list>
         </div>
-        
-        <app-room-list [chosenVisibility]="chosenVisibility$ | async"></app-room-list>
-    </div>
+        <div class="room_list_container">
+            <h1>{{ 'MAIN.CHATROOMS' | translate }}</h1>
+            <div class="toggle">
+                <mat-button-toggle-group name="visibility" aria-label="Visibility" 
+                    [value]="chosenVisibility$ | async" 
+                    (change)="onToggleChange($event.source.value)">
+                    <mat-button-toggle value="public">{{ 'COMMON.PUBLIC' | translate }}</mat-button-toggle>
+                    <mat-button-toggle value="private">{{ 'COMMON.PRIVATE' | translate }}</mat-button-toggle>
+                    <mat-button-toggle value="protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            
+            <app-room-list 
+            [chosenVisibility]="chosenVisibility$ | async" 
+            [users]="users.userList">
+            </app-room-list>
+        </div>
+    </ng-container>
 </div>
 

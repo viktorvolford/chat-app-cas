@@ -1,13 +1,12 @@
-import { Component, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
 import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.component';
-import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/models/User';
-import { ToastService } from 'src/app/shared/services/toast.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-room-list',
@@ -15,25 +14,21 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   styleUrls: ['./room-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoomListComponent implements OnChanges {
+export class RoomListComponent {
 
   @Input() public chosenVisibility: string | null = '';
+  @Input() public users: User[] | null = [];
 
-  public rooms$? : Observable<Room[]>;
-  public users$? : Observable<User[]>;
+  public rooms$ : Observable<Room[]>;
 
   constructor(
     private readonly roomService: RoomService,
     private readonly router: Router,
     private readonly dialog: MatDialog,
-    private readonly userService: UserService,
     private readonly toast: ToastService
-    ) { }
-
-  ngOnChanges(): void {
-    this.rooms$ = this.roomService.rooms$;
-    this.users$ = this.userService.users$;
-  }
+    ) {
+      this.rooms$ = this.roomService.rooms$;
+    }
 
   public openChatroom(id: string){
     this.router.navigate(['main/conversation'], {queryParams: {type: 'room', id: id}});

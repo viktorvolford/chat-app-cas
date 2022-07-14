@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../shared/services/user.service';
-import { TranslateService } from '@ngx-translate/core';
 import { LoginForm } from 'src/app/shared/models/LoginForm';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -26,8 +25,7 @@ export class LoginComponent implements OnInit {
         private readonly formBuilder: FormBuilder,
         private readonly authService: AuthService,
         private readonly userService: UserService,
-        private readonly snackBar: MatSnackBar,
-        private readonly translate: TranslateService
+        private readonly toast: ToastService
         ) { }
         
     ngOnInit(): void {     
@@ -49,11 +47,7 @@ export class LoginComponent implements OnInit {
         console.error(err);
         this.loginForm.get('email')?.setValue('');
         this.loginForm.get('password')?.setValue('');
-        this.snackBar.open(
-            this.translate.instant('LOGIN_REGISTER.AUTH_FAILED'), 
-            this.translate.instant('COMMON.OK'), 
-            {duration: 1000}
-        );
+        this.toast.createSnackBar('LOGIN_REGISTER.AUTH_FAILED', 'COMMON.OK', 1000);
     }
 
     private getCredentialsForType(loginType: string) : Promise<any> {

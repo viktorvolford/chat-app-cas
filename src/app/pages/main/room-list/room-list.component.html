@@ -1,10 +1,8 @@
-<ng-container *ngIf="users$ | async as users">
-    <app-room-box *ngFor="let room of rooms$ | async; let i = index;"
-        [isEven]="i % 2 === 0"
-        [room]="room" 
-        [users]="users" 
-        [chosenVisibility]="chosenVisibility"
-        (openDialog)="openDialog($event)"
-        (openChatroom)="openChatroom($event)">
-    </app-room-box>
-</ng-container>
+<app-room-box *ngFor="let room of rooms$ | async; let i = index;"
+    [isEven]="i % 2 === 0"
+    [room]="room" 
+    [users]="users" 
+    [chosenVisibility]="chosenVisibility"
+    (openDialog)="openDialog($event)"
+    (openChatroom)="openChatroom($event)">
+</app-room-box>

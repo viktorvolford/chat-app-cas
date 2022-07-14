@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, Observable, ReplaySubject, share } from 'rxjs';
-import { AppState } from 'src/app/store/models/app.state';
-import { selectUserSession } from 'src/app/store/selectors/user-session.selector';
+import { Observable } from 'rxjs';
+import { SessionService } from 'src/app/shared/services/session.service';
 import { User } from '../../../shared/models/User';
-import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -16,23 +13,13 @@ import { UserService } from '../../../shared/services/user.service';
 export class UserListComponent {
 
   public loggedInUser$: Observable<string>;
-  public users$?: Observable<User[]>;
+  @Input() public users: User[] | null = [];
 
   constructor(
-    private readonly userService: UserService,
+    private readonly sessionService: SessionService,
     private readonly router: Router,
-    private readonly store: Store<AppState>
   ) {
-    this.loggedInUser$ = this.store.pipe(
-      select(selectUserSession),
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnRefCountZero: false
-      }),
-      distinctUntilChanged()
-    );
-
-    this.users$ = this.userService.users$;
+    this.loggedInUser$ = this.sessionService.user$;
   }
 
   public openConversation(id: string){
