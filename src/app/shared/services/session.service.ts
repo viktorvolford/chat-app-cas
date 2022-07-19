@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, Observable, ReplaySubject, share } from 'rxjs';
 import { selectUserSession } from '../../store/selectors/user-session.selector';
-import { login, logout } from '../../store/actions/user-session.actions';
+import { loginSuccess, logout } from '../../store/actions/user-session.actions';
 import { AppState } from '../../store/models/app.state';
 import { UserService } from './user.service';
 
@@ -30,7 +30,7 @@ export class SessionService {
 
   public setUser(uid: string) : void {
     if(uid){
-      this.store.dispatch(login({id: uid}));
+      this.store.dispatch(loginSuccess({id: uid}));
       this._startKeepAlive(uid);
     } else {
       this.store.dispatch(logout());

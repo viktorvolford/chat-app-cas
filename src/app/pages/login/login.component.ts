@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth.service';
-import { UserService } from '../../shared/services/user.service';
 import { LoginForm } from 'src/app/shared/models/LoginForm';
-import { ToastService } from 'src/app/shared/services/toast.service';
+import { AppState } from 'src/app/store/models/app.state';
+import { select, Store } from '@ngrx/store';
+import { loginWithEmailPassword, loginWithGoogle } from 'src/app/store/actions/user-session.actions';
+import { Observable } from 'rxjs';
+import { selectLoading } from 'src/app/store/selectors/loading.selector';
+import { setLoading } from 'src/app/store/actions/loading.actions';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +17,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 export class LoginComponent implements OnInit {
 
     public hide: boolean = true;
-    public loading: boolean = false;
+    public loading: Observable<boolean>;
     
     public loginForm = this.formBuilder.group({
         email: '',
@@ -23,43 +26,35 @@ export class LoginComponent implements OnInit {
     
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly authService: AuthService,
-        private readonly userService: UserService,
-        private readonly toast: ToastService
-        ) { }
+        private readonly store: Store<AppState>
+        ) {
+            this.loading = this.store.pipe(select(selectLoading));
+        }
         
     ngOnInit(): void {     
-        this.addValidators();
+        this._addValidators();
     }
     
-    public login(loginType: string) : void {
-        this.loading = true;
-        this.getCredentialsForType(loginType).then(cred => {
-            this.userService.createNonExistingUser(cred);
-        }).catch(err => {
-            this.onAuthFailed(err);
-        }).finally(() => {
-            this.loading = false; 
-        });
+    public onSubmit(loginType: string) : void {
+        this.store.dispatch(setLoading({value: true}));
+
+        if(loginType === 'google'){
+            this.store.dispatch(loginWithGoogle());
+        } else {
+            const { email, password } = this.loginForm.value;
+            this.store.dispatch(loginWithEmailPassword({email, password}));
+        }
+        this._clearInputFields();
     }
 
-    private onAuthFailed(err: any) : void {
-        console.error(err);
+    private _clearInputFields() : void {
         this.loginForm.get('email')?.setValue('');
         this.loginForm.get('password')?.setValue('');
-        this.toast.createSnackBar('LOGIN_REGISTER.AUTH_FAILED', 'COMMON.OK', 1000);
-    }
-
-    private getCredentialsForType(loginType: string) : Promise<any> {
-        if(loginType === 'google'){
-            return this.authService.loginWithGoogle();
-        } else {
-            const { email, password} = this.loginForm.value;
-            return this.authService.login(email as string, password as string);
-        }
+        this.loginForm.get('email')?.setErrors(null);
+        this.loginForm.get('password')?.setErrors(null);
     }
     
-    private addValidators() : void {
+    private _addValidators() : void {
         this.loginForm.get('email')?.addValidators([Validators.required, Validators.email]);
         this.loginForm.get('password')?.addValidators([Validators.required, Validators.minLength(5)]);
     }

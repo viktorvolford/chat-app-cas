@@ -31,6 +31,7 @@ import { StoreModule } from '@ngrx/store';
 import { appReducers } from './store/reducers/app.reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
+import { appEffects } from './store/effects/app.effects';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -71,7 +72,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     provideStorage(() => getStorage()),
     StoreModule.forRoot(appReducers),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot(appEffects)
   ],
   providers: [],
   bootstrap: [AppComponent]

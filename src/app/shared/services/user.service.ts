@@ -59,7 +59,7 @@ export class UserService {
   }
 
   //For Google login method
-  public createNonExistingUser(cred: UserCredential): void {
+  public createUserIfNonExisting(cred: UserCredential): void {
     this.getById(cred.user.uid).pipe(take(1)).subscribe(data => {
       if(!data){
         const user : User = {
@@ -74,7 +74,6 @@ export class UserService {
         };  
         this.createUser(user);
       }
-      this.router.navigateByUrl('/main');
     });
   }
 

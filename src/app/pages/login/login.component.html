@@ -1,9 +1,9 @@
-<span class="loading-indicator" *ngIf="loading">
+<span class="loading-indicator" *ngIf="loading | async">
     <mat-spinner color="accent"></mat-spinner>
 </span>
 
 <div class="main_container">
-    <form [formGroup]="loginForm" (ngSubmit)="login('default')">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit('default')">
         <div>
             <h1>{{'LOGIN_REGISTER.LOGIN_BANNER' | translate}}</h1>
             <mat-form-field>
@@ -29,7 +29,7 @@
             <span><button  mat-raised-button color="primary" type="button" routerLink="/signup">{{'LOGIN_REGISTER.NOT_REGISTERED' | translate}}</button></span>
         </span>
         <span>
-            <span><button mat-raised-button color="primary" (click)="login('google')">{{'LOGIN_REGISTER.GOOGLE' | translate}}</button></span>
+            <span><button mat-raised-button color="primary" type="button" (click)="onSubmit('google')">{{'LOGIN_REGISTER.GOOGLE' | translate}}</button></span>
         </span>
     </form>
 </div>
