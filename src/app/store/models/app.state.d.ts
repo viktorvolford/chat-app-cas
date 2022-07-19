@@ -4,6 +4,7 @@ import { User } from "../../shared/models/User";
 
 export interface AppState {
     userSession: string,
+    loading: boolean,
     roomType: string,
     convoType: string,
     convoId: string,

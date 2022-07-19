@@ -2,6 +2,7 @@ import { ActionReducerMap } from "@ngrx/store";
 import { AppState } from "../models/app.state";
 import { convoTypeReducer } from "./convo.reducers";
 import { convoIdReducer } from "./convo.reducers";
+import { loadingReducer } from "./loading.reducer";
 import { messagesReducer } from "./messages.reducer";
 import { roomTypeReducer } from "./room-type.reducer";
 import { roomsReducer } from "./rooms.reducer";
@@ -10,6 +11,7 @@ import { usersReducer } from "./users.reducer";
 
 export const appReducers : ActionReducerMap<AppState> = {
     userSession: userSessionReducer,
+    loading: loadingReducer,
     roomType: roomTypeReducer,
     convoType: convoTypeReducer,
     convoId: convoIdReducer,
