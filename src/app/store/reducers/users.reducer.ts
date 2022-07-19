@@ -9,12 +9,6 @@ export const initialState = Array<User>();
 
 export const usersReducer = createReducer(
   initialState,
-  on(register, (state, { user }) => {
-    console.log("Adding user: ", user.id);
-    return [...state, user];
-  }),
-  on(loadUsers, (_, { users }) => {
-    console.log("Loading users from the database...");
-    return users;
-  })
+  on(register, (state, { user }) => [...state, user]),
+  on(loadUsers, (_, { users }) => users)
 );

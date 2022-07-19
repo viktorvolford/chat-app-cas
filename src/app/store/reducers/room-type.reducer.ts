@@ -7,8 +7,5 @@ export const initialState = 'public';
 
 export const roomTypeReducer = createReducer(
     initialState,
-    on(setRoomType, (_, {roomType}) => {
-        console.log("Setting the room type...");
-        return roomType;
-    })
+    on(setRoomType, (_, {roomType}) => roomType)
 );
