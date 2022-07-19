@@ -15,12 +15,11 @@ export class AuthEffects {
   loginWithEmailPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginWithEmailPassword),
-      exhaustMap(action => { 
-          return from(this.authService.loginWithEmailPassword(action.email as string, action.password as string)).pipe(
+      exhaustMap(action => 
+        from(this.authService.loginWithEmailPassword(action.email, action.password)).pipe(
             map(creds => loginSuccess({id: creds.user.uid})),
             catchError(_ => of(loginFailed()))
-          )
-        }
+        )
       )
     )
   );
@@ -30,8 +29,7 @@ export class AuthEffects {
       ofType(loginWithGoogle),
       exhaustMap(_ =>  
         from(this.authService.loginWithGoogle()).pipe(
-          map(anyCred => {
-              const cred: UserCredential = anyCred;
+          map((cred: UserCredential) => {
               this.userService.createUserIfNonExisting(cred);
               return loginSuccess({id: cred.user.uid});
           }),

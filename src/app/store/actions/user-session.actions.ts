@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 export const loginWithEmailPassword = createAction(
   '[Auth API] Login With Email & Password',
-  props<{email: string | undefined | null , password: string | undefined | null}>()
+  props<{email: string , password: string}>()
 );
 
 export const loginWithGoogle = createAction('[Auth API] Login With Google');

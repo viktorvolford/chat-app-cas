@@ -1,8 +1,7 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NonNullableFormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
-import { Name, UserForm } from '../../shared/models/UserForm';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
@@ -11,29 +10,28 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   styleUrls: ['./signup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent {
 
   public hide: boolean = true;
-
-  public signUpForm = this.createForm({
-    email: '',
-    username: '',
-    password: '',
-    rePassword: '',
-    name: this.createNameForm({
-      firstname: '',
-      lastname: ''
-    })
-  });
+  public signUpForm: FormGroup;
 
   constructor(
     private readonly location: Location,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: NonNullableFormBuilder,
     private readonly authService: AuthService,
     private readonly toast: ToastService
-    ) { }
-
-  ngOnInit(): void {}
+    ) {
+      this.signUpForm = this.formBuilder.group({
+        email: this.formBuilder.control('', [Validators.required, Validators.email]),
+        username: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
+        password: this.formBuilder.control('', [Validators.required, Validators.minLength(8)]),
+        rePassword: this.formBuilder.control('', [Validators.required, Validators.minLength(8)]),
+        name: this.formBuilder.group({
+          firstname: this.formBuilder.control('', [Validators.required]),
+          lastname: this.formBuilder.control('', [Validators.required])
+        })
+      })
+    }
 
   public onSubmit() : void {
     const { password, rePassword } = this.signUpForm.value;
@@ -42,25 +40,10 @@ export class SignupComponent implements OnInit {
       return;
     }
     this.authService.signup(this.signUpForm);
+    this.signUpForm.reset();
   }
 
   public goBack(){
     this.location.back();
-  }
-
-  private createForm(model: UserForm) : FormGroup {
-    const formGroup = this.formBuilder.group(model);
-    formGroup.get('email')?.addValidators([Validators.required, Validators.email]);
-    formGroup.get('username')?.addValidators([Validators.required, Validators.minLength(5)]);
-    formGroup.get('password')?.addValidators([Validators.required, Validators.minLength(8)]);
-    formGroup.get('rePassword')?.addValidators([Validators.required, Validators.minLength(8)]);
-    return formGroup;
-  }
-
-  private createNameForm(model: Name) : FormGroup {
-    const formGroup = this.formBuilder.group(model);
-    formGroup.get('firstname')?.addValidators([Validators.required]);
-    formGroup.get('lastname')?.addValidators([Validators.required]);
-    return formGroup;
   }
 }

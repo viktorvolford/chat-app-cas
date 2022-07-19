@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { LoginForm } from 'src/app/shared/models/LoginForm';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { AppState } from 'src/app/store/models/app.state';
 import { select, Store } from '@ngrx/store';
 import { loginWithEmailPassword, loginWithGoogle } from 'src/app/store/actions/user-session.actions';
@@ -14,25 +13,22 @@ import { setLoading } from 'src/app/store/actions/loading.actions';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent{
 
     public hide: boolean = true;
     public loading: Observable<boolean>;
-    
-    public loginForm = this.formBuilder.group({
-        email: '',
-        password: ''
-    } as LoginForm);
-    
+    public loginForm: FormGroup;
+     
     constructor(
-        private readonly formBuilder: FormBuilder,
+        private readonly formBuilder: NonNullableFormBuilder,
         private readonly store: Store<AppState>
-        ) {
-            this.loading = this.store.pipe(select(selectLoading));
-        }
-        
-    ngOnInit(): void {     
-        this._addValidators();
+    ) {
+        this.loading = this.store.pipe(select(selectLoading));
+
+        this.loginForm = this.formBuilder.group({
+            email: this.formBuilder.control('', [Validators.required, Validators.email]),
+            password: this.formBuilder.control('', [Validators.required, Validators.minLength(5)])
+        });
     }
     
     public onSubmit(loginType: string) : void {
@@ -44,19 +40,7 @@ export class LoginComponent implements OnInit {
             const { email, password } = this.loginForm.value;
             this.store.dispatch(loginWithEmailPassword({email, password}));
         }
-        this._clearInputFields();
-    }
-
-    private _clearInputFields() : void {
-        this.loginForm.get('email')?.setValue('');
-        this.loginForm.get('password')?.setValue('');
-        this.loginForm.get('email')?.setErrors(null);
-        this.loginForm.get('password')?.setErrors(null);
-    }
-    
-    private _addValidators() : void {
-        this.loginForm.get('email')?.addValidators([Validators.required, Validators.email]);
-        this.loginForm.get('password')?.addValidators([Validators.required, Validators.minLength(5)]);
+        this.loginForm.reset();
     }
       
   }
