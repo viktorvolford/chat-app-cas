@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Message } from '../models/Message';
-import { combineLatest, map, of, ReplaySubject, share, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, ReplaySubject, share, switchMap, tap } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from '../../pages/main/conversation/edit-dialog/edit-dialog.component';
@@ -22,7 +22,7 @@ export class MessageService {
     private readonly store: Store<AppState>
     ) { }
 
-  public getMessagesforRoom(id: string) {
+  public getMessagesforRoom(id: string) : Observable<Message[]> {
     return this.afs.collection<Message>(this.collectionName, ref => ref
       .where('type', '==', 'room')
       .where('target_id', '==', id)
@@ -36,7 +36,7 @@ export class MessageService {
       );
   }
 
-  public getPersonalMessages(firstId: string, secondId: string) {
+  public getPersonalMessages(firstId: string, secondId: string) : Observable<Message[]> {
      const first = this.afs.collection<Message>(this.collectionName, ref => ref
         .where('type', '==', 'personal')
         .where('sender_id', '==', firstId)
@@ -74,7 +74,7 @@ export class MessageService {
     });
   }
 
-  public sendMessage(form: FormGroup){
+  public sendMessage(form: FormGroup) : void {
     if (form.get('content')?.value) {
       form.get('date')?.setValue(new Date().getTime());
 
@@ -86,7 +86,7 @@ export class MessageService {
     }
   }
 
-  public openEditDialog(message: Message){
+  public openEditDialog(message: Message) : void {
     const dialogRef = this.dialog.open(EditDialogComponent, {data: {message}});
 
     dialogRef.afterClosed().subscribe(result => {
@@ -101,13 +101,13 @@ export class MessageService {
     });
   }
 
-  private create(message: Message) {
+  private create(message: Message) : Promise<void> {
     return this.afs.collection<Message>(this.collectionName).add(message).then(res => {
       this.afs.collection<Message>(this.collectionName).doc(res.id).update({id: res.id});
     });
   }
 
-  private update(message: Message) {
+  private update(message: Message) : Promise<void> {
     return this.afs.collection<Message>(this.collectionName).doc(message.id).set(message);
   }
 }
