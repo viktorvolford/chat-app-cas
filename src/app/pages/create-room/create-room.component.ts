@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } fro
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable } from 'rxjs';
-import { RoomForm } from '../../shared/models/RoomForm';
 
 @Component({
   selector: 'app-create-room',
@@ -27,17 +26,18 @@ export class CreateRoomComponent implements OnInit {
   public users$: Observable<User[]>;
   public filteredUsernames$: Observable<string[]>;
 
-  roomForm = this.createForm({
-    name: '',
-    password: '',
-    member: ''
-  });
+  public roomForm: FormGroup;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly userService: UserService,
     private readonly roomService: RoomService,
     ) {
+      this.roomForm = this.formBuilder.group({
+        name: this.formBuilder.control('', [Validators.required]),
+        password: this.formBuilder.control('', [Validators.minLength(4)]),
+        member: this.formBuilder.control('')
+      })
       this.users$ = this.userService.users$;
       this.filteredUsernames$ = this.userService.getFilteredUsernames(this.roomForm.get('member') as AbstractControl);
     }
@@ -75,12 +75,5 @@ export class CreateRoomComponent implements OnInit {
     if(this.roomForm.valid){
       this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenGroup as string);
     }
-  }
-
-  private createForm(model: RoomForm) {
-    let formGroup = this.formBuilder.group(model);
-    formGroup.get('name')?.addValidators([Validators.required]);
-    formGroup.get('password')?.addValidators([Validators.minLength(4)]);
-    return formGroup;
   }
 }
