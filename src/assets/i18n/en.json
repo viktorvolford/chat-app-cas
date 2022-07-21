@@ -11,7 +11,8 @@
         "PRIVATE": "Private",
         "PASSWORD_PROTECTED": "Password protected",
         "DELETE": "Delete",
-        "EDIT": "Edit"
+        "EDIT": "Edit",
+        "UNEXPECTED_ERROR": "An unexpected error happened. Try again later."
     },
     "MENU": {
         "LOGIN": "Login",
