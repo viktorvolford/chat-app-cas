@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { UserService } from './user.service';
 import firebase from 'firebase/compat/app'; 
 import { Observable, ReplaySubject, share } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
+import { User } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +26,9 @@ export class AuthService {
     return this.auth.signInWithPopup(googleAuthProvider);
   }
 
-  public signup(form: FormGroup) : Promise<void> {
-    const {email, password} = form.value; 
-    return this.auth.createUserWithEmailAndPassword(email, password).then(cred => {
-      this.userService.createUserFromForm(form, cred as any);
+  public signup(user: User, password: string) : Promise<any> {
+    return this.auth.createUserWithEmailAndPassword(user.email, password).then(cred => {
+      this.userService.createUserWithCred(user, cred as any);
     }).catch(error => {
       console.log(error);
     });
@@ -44,11 +43,7 @@ export class AuthService {
     );
   }
 
-  public logout() : void {
-    this.auth.signOut().then(() => {
-        this.router.navigateByUrl('/login');
-    }).catch(error => {
-      console.log(error);
-    });
+  public logout() : Promise<void> {
+    return this.auth.signOut();
   }
 }

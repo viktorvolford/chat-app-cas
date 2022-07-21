@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, Observable, ReplaySubject, share } from 'rxjs';
+import { distinctUntilChanged, Observable, ReplaySubject, share, take } from 'rxjs';
 import { selectUserSession } from '../../store/selectors/user-session.selector';
 import { loginSuccess, logout } from '../../store/actions/user-session.actions';
 import { AppState } from '../../store/models/app.state';
 import { UserService } from './user.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +34,11 @@ export class SessionService {
       this.store.dispatch(loginSuccess({id: uid}));
       this._startKeepAlive(uid);
     } else {
-      this.store.dispatch(logout());
       clearInterval(this.keepAlive);
     }
   }
 
-  private _startKeepAlive(user: string){
+  private _startKeepAlive(user: string) : void {
     this.userService.updateTime(user, new Date().getTime());
     this.keepAlive = setInterval(() => {
       this.userService.updateTime(user, new Date().getTime());

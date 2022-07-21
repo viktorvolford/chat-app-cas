@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { from, of } from 'rxjs';
@@ -8,7 +7,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { setLoading } from '../actions/loading.actions';
-import { loginWithEmailPassword, loginWithGoogle, loginFailed, loginSuccess } from '../actions/user-session.actions';
+import { loginWithEmailPassword, loginWithGoogle, loginFailed, loginSuccess, logout } from '../actions/user-session.actions';
  
 @Injectable()
 export class AuthEffects {
@@ -17,43 +16,51 @@ export class AuthEffects {
       ofType(loginWithEmailPassword),
       exhaustMap(action => 
         from(this.authService.loginWithEmailPassword(action.email, action.password)).pipe(
-            map(creds => loginSuccess({id: creds.user.uid})),
-            catchError(_ => of(loginFailed()))
+            catchError(() => of(loginFailed()))
         )
       )
-    )
+    ),
+    {dispatch: false}
   );
 
   loginWithGoogle$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginWithGoogle),
-      exhaustMap(_ =>  
+      exhaustMap(() =>  
         from(this.authService.loginWithGoogle()).pipe(
-          map((cred: UserCredential) => {
-              this.userService.createUserIfNonExisting(cred);
-              return loginSuccess({id: cred.user.uid});
-          }),
-          catchError(_ => of(loginFailed()))
+          tap(cred => this.userService.createUserIfNonExisting(cred)),
+          catchError(() => of(loginFailed()))
         ) 
       )
-    )
+    ),
+    {dispatch: false}
   );
 
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginSuccess),
-      tap(_ => this.router.navigateByUrl('/main')),
-      map(_ => setLoading({value: false}))
+      tap(() => this.router.navigateByUrl('/main')),
+      map(() => setLoading({value: false}))
     )
   );
 
   loginFailed$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginFailed),
-      tap(_ => this.toast.createSnackBar('LOGIN_REGISTER.AUTH_FAILED', 'COMMON.OK', 1000)),
-      map(_ => setLoading({value: false}))
+      tap(() => this.toast.createSnackBar('LOGIN_REGISTER.AUTH_FAILED', 'COMMON.OK', 1000)),
+      map(() => setLoading({value: false}))
     )
   );
+
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(logout),
+      exhaustMap(() => from(this.authService.logout()).pipe(
+        tap(() => this.router.navigateByUrl('/login'))
+      )),
+    ),
+    {dispatch: false}
+  )
  
   constructor(
     private readonly actions$: Actions,

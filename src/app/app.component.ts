@@ -4,6 +4,9 @@ import { AuthService } from './shared/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { SessionService } from './shared/services/session.service';
+import { Store } from '@ngrx/store';
+import { AppState } from './store/models/app.state';
+import { logout } from './store/actions/user-session.actions';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +17,14 @@ import { SessionService } from './shared/services/session.service';
 export class AppComponent implements OnDestroy {
 
   private sessionSubscription: Subscription;
-
+  
   public selectedLang: string;
   public loggedInUser$: Observable<string>;
 
   constructor(
     private readonly authService: AuthService,
     private readonly sessionService: SessionService,
+    private readonly store: Store<AppState>,
     public readonly translate: TranslateService
   ){
     translate.addLangs(['en', 'hu']);
@@ -62,6 +66,6 @@ export class AppComponent implements OnDestroy {
   }
 
   public logout() : void{
-    this.authService.logout();
+    this.store.dispatch(logout());
   }
 }

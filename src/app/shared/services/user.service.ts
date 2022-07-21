@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { debounceTime, distinctUntilChanged, map, Observable, ReplaySubject, share, startWith, switchMap, take, tap } from 'rxjs';
+import { collection, Firestore, addDoc } from '@angular/fire/firestore';
+import { debounceTime, distinctUntilChanged, from, map, Observable, ReplaySubject, share, startWith, switchMap, take, tap } from 'rxjs';
 import { User } from '../models/User';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
 import { loadUsers } from '../../store/actions/users.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/models/app.state';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -72,23 +73,15 @@ export class UserService {
             },
             last_active: new Date().getTime()
         };  
-        this.createUser(user);
+       this.createUser(user);
       }
     });
   }
 
-  public createUserFromForm(form: FormGroup, cred: UserCredential): void {
-    const user : User = {
-      id: cred.user?.uid as string,
-      email: form.get('email')?.value as string,
-      username: form.get('username')?.value as string,
-      name: {
-        firstname: form.get('name.firstname')?.value,
-        lastname: form.get('name.lastname')?.value
-      },
-      last_active: new Date().getTime()
-    };
-    this.createUser(user);
+  public createUserWithCred(user: User, cred: UserCredential): void {
+    const newUser : User = Object.assign({}, user);
+    newUser.id = cred.user.uid;
+    this.createUser(newUser);
   }
 
   private getAll() : Observable<User[]> {
