@@ -7,6 +7,7 @@ import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable } from 'rxjs';
+import { RoomType } from '../../shared/models/Room';
 
 @Component({
   selector: 'app-create-room',
@@ -18,7 +19,8 @@ export class CreateRoomComponent implements OnInit {
 
   public selectedUsers = new Set<User>();
 
-  public chosenGroup?: string;
+  public roomType = RoomType;
+  public chosenType!: RoomType;
 
   @ViewChild('memberInput') private memberInput?: ElementRef<HTMLInputElement>;
   public separatorKeysCodes: number[] = [ ENTER, COMMA ];
@@ -73,7 +75,7 @@ export class CreateRoomComponent implements OnInit {
 
   public onSubmit(){
     if(this.roomForm.valid){
-      this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenGroup as string);
+      this.roomService.onSubmit(this.roomForm, this.selectedUsers, this.chosenType);
     }
   }
 }

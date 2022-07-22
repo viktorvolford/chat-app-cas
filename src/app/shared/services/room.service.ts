@@ -7,7 +7,7 @@ import { combineLatest, distinctUntilChanged, map, Observable, ReplaySubject, sh
 import { selectRoomType } from 'src/app/store/selectors/room-type.selector';
 import { loadRooms } from '../../store/actions/rooms.actions';
 import { AppState } from '../../store/models/app.state';
-import { Room } from '../models/Room';
+import { Room, RoomType } from '../models/Room';
 import { User } from '../models/User';
 import { SessionService } from './session.service';
 import { ToastService } from './toast.service';
@@ -17,9 +17,10 @@ import { ToastService } from './toast.service';
 })
 export class RoomService {
 
+  private roomType = RoomType;
   private collectionName = 'Rooms';
   private user$: Observable<string>;
-  private type$: Observable<string>;
+  private type$: Observable<RoomType>;
   public rooms$: Observable<Room[]>
 
   constructor(
@@ -42,16 +43,20 @@ export class RoomService {
 
     this.rooms$ = combineLatest([this.user$, this.type$]).pipe(
       switchMap(data => {
-        const [user, convoType] = data;
+        const [user, roomType] = data;
         let rooms$: Observable<Room[]>;
-        if(convoType === 'public'){
-          rooms$ = this.getPublicRooms();
-        }
-        else if(convoType === 'private'){
-          rooms$ = this.getPrivateRooms(user);
-        }
-        else{
-          rooms$ = this.getProtectedRooms();
+        switch(roomType){
+          case RoomType.Public:
+            rooms$ = this.getPublicRooms();
+            break;
+          case RoomType.Private:
+            rooms$ = this.getPrivateRooms(user);
+            break;
+          case RoomType.Protected:
+            rooms$ = this.getProtectedRooms();
+            break;
+          default:
+            rooms$ = this.getPublicRooms();
         }
         return rooms$;
       }),
@@ -74,13 +79,13 @@ export class RoomService {
     );
   }
 
-  public onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenGroup: string): void {
+  public onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenType: RoomType): void {
     this.user$.pipe(take(1)).subscribe(user => {
       this.create({
         id: '',
         name: form.get('name')?.value as string,
         members: Array.from(selectedUsers).map(user => user.id),
-        visibility: chosenGroup as string,
+        type: chosenType,
         owner_id: user,
         password: form.get('password')?.value as string,
       } as Room).then(_ => {
@@ -93,15 +98,15 @@ export class RoomService {
   }
 
   private getPublicRooms() : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'public')).valueChanges();
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Public)).valueChanges();
   }
 
   private getPrivateRooms(user_id: string) : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'private').where('members', 'array-contains', user_id)).valueChanges();
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Private).where('members', 'array-contains', user_id)).valueChanges();
   }
 
   private getProtectedRooms() : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('visibility', '==', 'protected')).valueChanges();
+    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Protected)).valueChanges();
   }
 
   private create(room: Room) : Promise<void> {

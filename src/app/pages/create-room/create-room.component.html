@@ -6,17 +6,18 @@
                 <mat-label for="name">{{ 'CREATE_ROOM.NAME' | translate }}</mat-label>
                 <input matInput type="text" formControlName="name"/>
             </mat-form-field>
-            <mat-radio-group [(ngModel)]="chosenGroup" [ngModelOptions]="{standalone: true}" aria-label="Accessibility">
-                <mat-radio-button value="public" checked="true">{{ 'COMMON.PUBLIC' | translate }}</mat-radio-button>
-                <mat-radio-button value="private">{{ 'COMMON.PRIVATE' | translate }}</mat-radio-button>
-                <mat-radio-button value="protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-radio-button>
+            <mat-radio-group [(ngModel)]="chosenType" [ngModelOptions]="{standalone: true}" aria-label="Accessibility">
+                <mat-radio-button [value]="roomType.Public" checked="true">{{ 'COMMON.PUBLIC' | translate }}</mat-radio-button>
+                <mat-radio-button [value]="roomType.Private">{{ 'COMMON.PRIVATE' | translate }}</mat-radio-button>
+                <mat-radio-button [value]="roomType.Protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-radio-button>
             </mat-radio-group>
-            <mat-form-field *ngIf="chosenGroup === 'protected'">
+            <ng-container [ngSwitch]="chosenType">
+              <mat-form-field *ngSwitchCase="roomType.Protected">
                 <mat-label for="name">{{ 'CREATE_ROOM.PASSWORD' | translate }}</mat-label>
                 <input matInput type="password" formControlName="password">
-            </mat-form-field>
+              </mat-form-field>
 
-            <mat-form-field *ngIf="chosenGroup === 'private'" class="example-chip-list" appearance="fill">
+              <mat-form-field *ngSwitchCase="roomType.Private" class="example-chip-list" appearance="fill">
                 <mat-label>{{ 'CREATE_ROOM.MEMBERS' | translate }}</mat-label>
                 <ng-container *ngIf="users$ | async as users">
                   <mat-chip-list #chipList aria-label="Members">
@@ -42,7 +43,7 @@
                   </mat-autocomplete>
                 </ng-container>
               </mat-form-field>
-
+            </ng-container>
             <span>
                 <span><button mat-raised-button color="primary" type="submit" class="submit">{{ 'COMMON.SUBMIT' | translate }}</button></span>
             </span>

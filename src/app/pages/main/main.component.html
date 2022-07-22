@@ -7,16 +7,16 @@
             <h1>{{ 'MAIN.CHATROOMS' | translate }}</h1>
             <div class="toggle">
                 <mat-button-toggle-group name="visibility" aria-label="Visibility" 
-                    [value]="chosenVisibility$ | async" 
+                    [value]="chosenType$ | async" 
                     (change)="onToggleChange($event.source.value)">
-                    <mat-button-toggle value="public">{{ 'COMMON.PUBLIC' | translate }}</mat-button-toggle>
-                    <mat-button-toggle value="private">{{ 'COMMON.PRIVATE' | translate }}</mat-button-toggle>
-                    <mat-button-toggle value="protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-button-toggle>
+                    <mat-button-toggle [value]="roomType.Public">{{ 'COMMON.PUBLIC' | translate }}</mat-button-toggle>
+                    <mat-button-toggle [value]="roomType.Private">{{ 'COMMON.PRIVATE' | translate }}</mat-button-toggle>
+                    <mat-button-toggle [value]="roomType.Protected">{{ 'COMMON.PASSWORD_PROTECTED' | translate }}</mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
             
             <app-room-list 
-            [chosenVisibility]="(chosenVisibility$ | async)!" 
+            [chosenType]="(chosenType$ | async)!" 
             [users]="users.userList">
             </app-room-list>
         </div>

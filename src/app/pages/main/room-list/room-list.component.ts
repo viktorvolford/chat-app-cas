@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
-import { Room } from '../../../shared/models/Room';
+import { Room, RoomType } from '../../../shared/models/Room';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
@@ -26,7 +26,7 @@ export class RoomListComponent {
     return this._users;
   }
 
-  @Input() public chosenVisibility!: string;
+  @Input() public chosenType!: RoomType;
 
   public rooms$ : Observable<Room[]>;
 

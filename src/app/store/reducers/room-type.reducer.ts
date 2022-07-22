@@ -1,9 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
+import { RoomType } from 'src/app/shared/models/Room';
 import {
     setRoomType
 } from '../actions/room-type.actions';
 
-export const initialState = 'public';
+export const initialState = RoomType.Public;
 
 export const roomTypeReducer = createReducer(
     initialState,

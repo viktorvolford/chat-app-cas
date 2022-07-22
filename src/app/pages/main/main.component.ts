@@ -6,6 +6,7 @@ import { setRoomType } from '../../store/actions/room-type.actions';
 import { selectRoomType } from '../../store/selectors/room-type.selector';
 import { AppState } from '../../store/models/app.state';
 import { UserService } from 'src/app/shared/services/user.service';
+import { RoomType } from 'src/app/shared/models/Room';
 
 @Component({
   selector: 'app-main',
@@ -15,14 +16,15 @@ import { UserService } from 'src/app/shared/services/user.service';
 })
 export class MainComponent {
 
-  public chosenVisibility$: Observable<string>;
+  public roomType = RoomType;
+  public chosenType$: Observable<RoomType>;
   public users$ : Observable<User[]>;
 
   constructor(
     private readonly store: Store<AppState>,
     private readonly userService: UserService
   ) {
-    this.chosenVisibility$ = this.store.pipe(
+    this.chosenType$ = this.store.pipe(
       select(selectRoomType),
       share({
         connector: () => new ReplaySubject(1),
@@ -33,7 +35,8 @@ export class MainComponent {
     this.users$ = this.userService.users$;
   }
 
-  public onToggleChange(roomType: string): void {
+  public onToggleChange(roomType: RoomType): void {
+    console.log(roomType);
     this.store.dispatch(setRoomType({roomType}));
   }
 }

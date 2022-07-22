@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../../../shared/models/User';
-import { Room } from '../../../../shared/models/Room';
+import { Room, RoomType } from '../../../../shared/models/Room';
 
 @Component({
   selector: 'app-room-box',
@@ -10,12 +10,14 @@ import { Room } from '../../../../shared/models/Room';
 })
 export class RoomBoxComponent {
 
+  public roomType = RoomType;
+
   @Output() private openDialog: EventEmitter<Room> = new EventEmitter();
   @Output() private openChatroom: EventEmitter<string> = new EventEmitter();
 
   @Input() public room!: Room;
   @Input() public users: User[] | null = [];
-  @Input() public chosenVisibility!: string;
+  @Input() public chosenType!: RoomType;
   @Input() public isEven!: Boolean;
 
   constructor() { }

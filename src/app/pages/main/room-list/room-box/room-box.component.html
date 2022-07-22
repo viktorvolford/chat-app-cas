@@ -5,18 +5,20 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <p *ngIf="room.visibility === 'public'" [innerHTML]="'MAIN.PUBLIC_DESC' | translate"></p>
-        <p *ngIf="room.visibility === 'private'">
-            <span [innerHTML]="'MAIN.PRIVATE_DESC' | translate"></span>
-            <span *ngFor="let member of room.members; last as last">
-                <b>{{ member | username:users }}</b>
-                <span *ngIf="!last">, </span>
-            </span>
-        </p>
-        <p *ngIf="room.visibility === 'protected'" [innerHTML]="'MAIN.PASSWORD_PROTECTED_DESC' | translate"></p>
+        <ng-container [ngSwitch]="room.type">
+            <p *ngSwitchCase="roomType.Public" [innerHTML]="'MAIN.PUBLIC_DESC' | translate"></p>
+            <p *ngSwitchCase="roomType.Private">
+                <span [innerHTML]="'MAIN.PRIVATE_DESC' | translate"></span>
+                <span *ngFor="let member of room.members; last as last">
+                    <b>{{ member | username:users }}</b>
+                    <span *ngIf="!last">, </span>
+                </span>
+            </p>
+            <p *ngSwitchCase="roomType.Protected" [innerHTML]="'MAIN.PASSWORD_PROTECTED_DESC' | translate"></p>
+        </ng-container>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-raised-button color="primary" type="button" (click)="chosenVisibility === 'protected' ? onOpenDialog(room) : onOpenChatroom(room.id)">
+        <button mat-raised-button color="primary" type="button" (click)="chosenType === roomType.Protected ? onOpenDialog(room) : onOpenChatroom(room.id)">
             {{ 'MAIN.JOIN' | translate }}
         </button>
     </mat-card-actions>

@@ -3,6 +3,12 @@ export interface Room {
     members: Array<string>,
     name: string,
     owner_id: string,
-    visibility: string,
+    type: RoomType,
     password: string
 }
+
+export enum RoomType {
+    Public,
+    Private,
+    Protected
+};
