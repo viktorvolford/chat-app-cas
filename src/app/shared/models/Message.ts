@@ -4,5 +4,10 @@ export interface Message {
     content: string,
     sender_id: string,
     target_id: string,
-    type: string // choices: {"personal", "room"}
+    type: ConvoType
+}
+
+export enum ConvoType {
+    Personal,
+    Room
 }

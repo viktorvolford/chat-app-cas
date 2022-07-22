@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Message } from '../models/Message';
+import { ConvoType, Message } from '../models/Message';
 import { combineLatest, map, Observable, of, ReplaySubject, share, switchMap, tap } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ export class MessageService {
 
   public getMessagesforRoom(id: string) : Observable<Message[]> {
     return this.afs.collection<Message>(this.collectionName, ref => ref
-      .where('type', '==', 'room')
+      .where('type', '==', ConvoType.Room)
       .where('target_id', '==', id)
       .orderBy('date', 'asc'))
       .valueChanges().pipe(
@@ -38,7 +38,7 @@ export class MessageService {
 
   public getPersonalMessages(firstId: string, secondId: string) : Observable<Message[]> {
      const first = this.afs.collection<Message>(this.collectionName, ref => ref
-        .where('type', '==', 'personal')
+        .where('type', '==', ConvoType.Personal)
         .where('sender_id', '==', firstId)
         .where('target_id', '==', secondId)
         .orderBy('date', 'asc'))
@@ -47,7 +47,7 @@ export class MessageService {
         return first;
       }
       const second = this.afs.collection<Message>(this.collectionName, ref => ref
-        .where('type', '==', 'personal')
+        .where('type', '==', ConvoType.Personal)
         .where('sender_id', '==', secondId)
         .where('target_id', '==', firstId)
         .orderBy('date', 'asc'))

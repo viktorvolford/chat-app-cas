@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { combineLatest, distinctUntilChanged, Observable, ReplaySubject, share, take } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
-import { Message } from '../../../shared/models/Message';
+import { ConvoType, Message } from '../../../shared/models/Message';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { select, Store } from '@ngrx/store';
@@ -20,8 +20,9 @@ import { SessionService } from 'src/app/shared/services/session.service';
 })
 export class ConversationComponent {
 
-  public convoType$: Observable<string>;
-  public convoId$: Observable<string>;
+  public convoType = ConvoType;
+  public convoType$: Observable<ConvoType | null>;
+  public convoId$: Observable<string | null>;
   public loggedInUser$: Observable<string>;
 
   public messages$?: Observable<Message[]>;
@@ -29,12 +30,12 @@ export class ConversationComponent {
   public roomName$!: Observable<string>;
 
   public messageForm = this.formBuilder.group({
-    id: '',
-    content: '',
-    sender_id: '',
-    target_id: '',
-    type: '',
-    date: new Date().getTime()
+    id: this.formBuilder.control(''),
+    content: this.formBuilder.control(''),
+    sender_id: this.formBuilder.control(''),
+    target_id: this.formBuilder.control(''),
+    type: this.formBuilder.control<ConvoType | null>(null),
+    date: this.formBuilder.control<number>(Date.now())
   });
 
   constructor(
@@ -68,7 +69,8 @@ export class ConversationComponent {
 
     combineLatest([this.route.queryParamMap, this.loggedInUser$]).pipe(take(1)).subscribe(data => {
       const [paramMap, user] = data;
-      const convoType = paramMap.get('type') as string;
+      const convoType = +(paramMap.get('type')!) as ConvoType;
+      console.log(typeof convoType);
       const convoId = paramMap.get('id') as string;
       this.store.dispatch(setConvoType({convoType}));
       this.store.dispatch(setConvoId({convoId}));
@@ -79,14 +81,21 @@ export class ConversationComponent {
     });
   }
 
-  private _loadMessages(convoType: string, convoId: string) : void {
-    if(convoType === 'personal'){
-      this.loggedInUser$.pipe(take(1)).subscribe(user => {
-        this.messages$ = this.messageService.getPersonalMessages(convoId, user);
-      });
-    } else {
-      this.roomName$ = this.roomService.getRoomNameById(convoId);
-      this.messages$ = this.messageService.getMessagesforRoom(convoId);
+  private _loadMessages(convoType: ConvoType, convoId: string) : void {
+    switch(convoType){
+      case ConvoType.Personal:
+        this.loggedInUser$.pipe(take(1)).subscribe(user => {
+          this.messages$ = this.messageService.getPersonalMessages(convoId, user);
+        });
+        break;
+      case ConvoType.Room:
+        this.roomName$ = this.roomService.getRoomNameById(convoId);
+        this.messages$ = this.messageService.getMessagesforRoom(convoId);
+        break;
+      default:
+        this.loggedInUser$.pipe(take(1)).subscribe(user => {
+          this.messages$ = this.messageService.getPersonalMessages(convoId, user);
+        });
     }
   }
 

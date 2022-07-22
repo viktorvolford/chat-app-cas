@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ConvoType } from 'src/app/shared/models/Message';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { User } from '../../../shared/models/User';
 
@@ -23,7 +24,7 @@ export class UserListComponent {
   }
 
   public openConversation(id: string){
-    this.router.navigate(['main/conversation'], {queryParams: {type: 'personal', id: id}});
+    this.router.navigate(['main/conversation'], {queryParams: {type: ConvoType.Personal, id: id}});
   }
 
   public isOnline(user: User): boolean {

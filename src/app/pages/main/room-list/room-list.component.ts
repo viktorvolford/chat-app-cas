@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.component';
 import { User } from '../../../shared/models/User';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ConvoType } from 'src/app/shared/models/Message';
 
 @Component({
   selector: 'app-room-list',
@@ -40,7 +41,7 @@ export class RoomListComponent {
     }
 
   public openChatroom(id: string){
-    this.router.navigate(['main/conversation'], {queryParams: {type: 'room', id: id}});
+    this.router.navigate(['main/conversation'], {queryParams: {type: ConvoType.Room, id: id}});
   }
 
   public openDialog(room: Room){
