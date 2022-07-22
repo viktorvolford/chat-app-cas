@@ -13,18 +13,18 @@ export class RoomBoxComponent {
   @Output() private openDialog: EventEmitter<Room> = new EventEmitter();
   @Output() private openChatroom: EventEmitter<string> = new EventEmitter();
 
-  @Input() public room?: Room;
+  @Input() public room!: Room;
   @Input() public users: User[] | null = [];
-  @Input() public chosenVisibility: string | null = '';
-  @Input() public isEven?: Boolean;
+  @Input() public chosenVisibility!: string;
+  @Input() public isEven!: Boolean;
 
   constructor() { }
 
-  public onOpenDialog(room: Room | undefined){
+  public onOpenDialog(room: Room){
     this.openDialog.emit(room);
   }
 
-  public onOpenChatroom(id: string | undefined){
+  public onOpenChatroom(id: string){
     this.openChatroom.emit(id);
   }
 

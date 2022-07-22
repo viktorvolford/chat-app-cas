@@ -48,7 +48,7 @@ export class UserService {
     return field.valueChanges.pipe(
       startWith(null),
       debounceTime(500),
-      switchMap((searchValue: string | null) => searchValue ? this._filter(searchValue) : this.users$.pipe(
+      switchMap((searchValue: string) => searchValue ? this._filter(searchValue) : this.users$.pipe(
         map(users => users.map(user => user.username)),
       )),
       share({

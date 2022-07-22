@@ -6,7 +6,7 @@ import { User } from '../models/User';
 })
 export class FullNamePipe implements PipeTransform {
 
-  transform(value: string | null |undefined, users: User[]): string {
+  transform(value: string, users: User[]): string {
     const targetPerson = users.find(user => user.id === value);
     return targetPerson?.name.firstname + ' ' + targetPerson?.name.lastname;
   }

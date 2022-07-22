@@ -9,10 +9,8 @@ import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/models/app.state';
-import { selectUserSession } from '../../../store/selectors/user-session.selector';
 import { selectConvoId, selectConvoType } from '../../../store/selectors/convo.selector';
 import { setConvoId, setConvoType } from '../../../store/actions/convo.actions';
-import { selectUsers } from 'src/app/store/selectors/users.selector';
 import { SessionService } from 'src/app/shared/services/session.service';
 
 @Component({
@@ -28,7 +26,7 @@ export class ConversationComponent {
 
   public messages$?: Observable<Message[]>;
   public users$: Observable<User[]>;
-  public roomName$?: Observable<string | undefined>;
+  public roomName$!: Observable<string>;
 
   public messageForm = this.formBuilder.group({
     id: '',

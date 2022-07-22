@@ -1,12 +1,12 @@
 <div class="main_container" *ngIf="users$ | async as users">
     <ng-container [ngSwitch]="convoType$ | async">
-        <h1 class="target_name" *ngSwitchCase="'personal'">{{ (convoId$ | async) | fullName:users }}</h1>
+        <h1 class="target_name" *ngSwitchCase="'personal'">{{ (convoId$ | async)! | fullName:users }}</h1>
         <h1 class="target_name" *ngSwitchCase="'room'">{{ roomName$ | async }}</h1>
     </ng-container>
     <div class="message_container">
         <app-message-box *ngFor="let message of messages$ | async; let i = index;" 
             [message]="message" 
-            [loggedInUser]="loggedInUser$ | async" 
+            [loggedInUser]="(loggedInUser$ | async)!" 
             [users]="users" 
             (deleteMessage)="deleteMessage($event)" 
             (editMessage)="openEditDialog($event)">

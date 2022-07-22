@@ -1,22 +1,22 @@
 <mat-card class="mat-elevation-z4" [ngClass]="isEven ? 'card-even' : 'card-odd'">
     <mat-card-header>
         <mat-card-title>
-            {{ room?.name }}
+            {{ room.name }}
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <p *ngIf="room?.visibility === 'public'" [innerHTML]="'MAIN.PUBLIC_DESC' | translate"></p>
-        <p *ngIf="room?.visibility === 'private'">
+        <p *ngIf="room.visibility === 'public'" [innerHTML]="'MAIN.PUBLIC_DESC' | translate"></p>
+        <p *ngIf="room.visibility === 'private'">
             <span [innerHTML]="'MAIN.PRIVATE_DESC' | translate"></span>
-            <span *ngFor="let member of room?.members; last as last">
+            <span *ngFor="let member of room.members; last as last">
                 <b>{{ member | username:users }}</b>
                 <span *ngIf="!last">, </span>
             </span>
         </p>
-        <p *ngIf="room?.visibility === 'protected'" [innerHTML]="'MAIN.PASSWORD_PROTECTED_DESC' | translate"></p>
+        <p *ngIf="room.visibility === 'protected'" [innerHTML]="'MAIN.PASSWORD_PROTECTED_DESC' | translate"></p>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-raised-button color="primary" type="button" (click)="chosenVisibility === 'protected' ? onOpenDialog(room) : onOpenChatroom(room?.id)">
+        <button mat-raised-button color="primary" type="button" (click)="chosenVisibility === 'protected' ? onOpenDialog(room) : onOpenChatroom(room.id)">
             {{ 'MAIN.JOIN' | translate }}
         </button>
     </mat-card-actions>

@@ -16,8 +16,17 @@ import { ToastService } from '../../../shared/services/toast.service';
 })
 export class RoomListComponent {
 
-  @Input() public chosenVisibility: string | null = '';
-  @Input() public users: User[] | null = [];
+  private _users! : User[];
+
+  @Input()
+  set users(users: User[] | null){
+    this._users = users ?? [];
+  }
+  get users() : User[] {
+    return this._users;
+  }
+
+  @Input() public chosenVisibility!: string;
 
   public rooms$ : Observable<Room[]>;
 

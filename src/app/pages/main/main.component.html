@@ -16,7 +16,7 @@
             </div>
             
             <app-room-list 
-            [chosenVisibility]="chosenVisibility$ | async" 
+            [chosenVisibility]="(chosenVisibility$ | async)!" 
             [users]="users.userList">
             </app-room-list>
         </div>
