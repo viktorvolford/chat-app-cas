@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { combineLatest, distinctUntilChanged, map, Observable, ReplaySubject, share, switchMap, take, tap } from 'rxjs';
+import { combineLatest, distinctUntilChanged, EMPTY, map, Observable, ReplaySubject, share, switchMap, take, tap } from 'rxjs';
 import { selectRoomType } from 'src/app/store/selectors/room-type.selector';
 import { loadRooms } from '../../store/actions/rooms.actions';
 import { AppState } from '../../store/models/app.state';
@@ -17,7 +17,6 @@ import { ToastService } from './toast.service';
 })
 export class RoomService {
 
-  private roomType = RoomType;
   private collectionName = 'Rooms';
   private user$: Observable<string>;
   private type$: Observable<RoomType>;
@@ -44,21 +43,7 @@ export class RoomService {
     this.rooms$ = combineLatest([this.user$, this.type$]).pipe(
       switchMap(data => {
         const [user, roomType] = data;
-        let rooms$: Observable<Room[]>;
-        switch(roomType){
-          case RoomType.Public:
-            rooms$ = this.getPublicRooms();
-            break;
-          case RoomType.Private:
-            rooms$ = this.getPrivateRooms(user);
-            break;
-          case RoomType.Protected:
-            rooms$ = this.getProtectedRooms();
-            break;
-          default:
-            rooms$ = this.getPublicRooms();
-        }
-        return rooms$;
+        return this._getRooms(roomType, user);
       }),
       tap(rooms => this.store.dispatch(loadRooms({rooms}))),
       share({
@@ -81,7 +66,7 @@ export class RoomService {
 
   public onSubmit(form: FormGroup, selectedUsers: Set<User>, chosenType: RoomType): void {
     this.user$.pipe(take(1)).subscribe(user => {
-      this.create({
+      this._create({
         id: '',
         name: form.get('name')?.value as string,
         members: Array.from(selectedUsers).map(user => user.id),
@@ -97,19 +82,19 @@ export class RoomService {
     });
   }
 
-  private getPublicRooms() : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Public)).valueChanges();
+  private _getRooms(type : RoomType, user : string) : Observable<Room[]> {
+    switch(type){
+      case RoomType.Public:
+      case RoomType.Protected:
+        return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', type)).valueChanges();
+      case RoomType.Private:
+        return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', type).where('members', 'array-contains', user)).valueChanges();
+      default:
+        return EMPTY;
+    }    
   }
 
-  private getPrivateRooms(user_id: string) : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Private).where('members', 'array-contains', user_id)).valueChanges();
-  }
-
-  private getProtectedRooms() : Observable<Room[]> {
-    return this.afs.collection<Room>(this.collectionName, ref => ref.where('type', '==', this.roomType.Protected)).valueChanges();
-  }
-
-  private create(room: Room) : Promise<void> {
+  private _create(room: Room) : Promise<void> {
     return this.afs.collection<Room>(this.collectionName).add(room).then(res => {
       this.afs.collection<Room>(this.collectionName).doc(res.id).update({id: res.id});
     });
