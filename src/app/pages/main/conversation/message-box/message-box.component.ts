@@ -21,11 +21,11 @@ export class MessageBoxComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onDelete(message: Message | undefined){
+  onDelete(message: Message){
     this.deleteMessage.emit(message);
   }
 
-  onOpenEditDialog(message: Message | undefined){
+  onOpenEditDialog(message: Message){
     this.editMessage.emit(message);
   }
 

@@ -1,5 +1,5 @@
 <h1>{{ 'MAIN.ALL_USERS' | translate }}</h1>
-<div *ngFor="let user of users ; first as first" class="user" (click)="openConversation(user.id)">
+<div *ngFor="let user of users ; first as first" class="user" (click)="onOpenConversation(user.id)">
     <span class="username">
         <div>
             <b>{{user.username}}</b>

@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConvoType } from 'src/app/shared/models/ConvoType';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { User } from '../../../shared/models/User';
 
@@ -15,16 +13,16 @@ export class UserListComponent {
 
   public loggedInUser$: Observable<string>;
   @Input() public users: User[] | null = [];
+  @Output() public openConversation : EventEmitter<string> = new EventEmitter();
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly router: Router,
   ) {
     this.loggedInUser$ = this.sessionService.user$;
   }
 
-  public openConversation(id: string){
-    this.router.navigate(['main/conversation'], {queryParams: {type: ConvoType.Personal, id: id}});
+  public onOpenConversation(id: string){
+    this.openConversation.emit(id);
   }
 
   public isOnline(user: User): boolean {

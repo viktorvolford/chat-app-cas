@@ -1,7 +1,10 @@
 <div class="main_container">
     <ng-container *ngIf="{userList: users$ | async} as users">
         <div class="user_list_container">
-            <app-user-list [users]="users.userList"></app-user-list>
+            <app-user-list 
+            [users]="users.userList"
+            (openConversation)="openConversation($event, convoType.Personal)">
+            </app-user-list>
         </div>
         <div class="room_list_container">
             <h1>{{ 'MAIN.CHATROOMS' | translate }}</h1>
@@ -17,7 +20,8 @@
             
             <app-room-list 
             [chosenType]="(chosenType$ | async)!" 
-            [users]="users.userList">
+            [users]="users.userList"
+            (openChatroom)="openConversation($event, convoType.Room)">
             </app-room-list>
         </div>
     </ng-container>

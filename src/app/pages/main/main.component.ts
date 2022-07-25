@@ -7,6 +7,8 @@ import { selectRoomType } from '../../store/selectors/room-type.selector';
 import { AppState } from '../../store/models/app.state';
 import { UserService } from '../../shared/services/user.service';
 import { RoomType } from '../../shared/models/RoomType';
+import { Router } from '@angular/router';
+import { ConvoType } from 'src/app/shared/models/ConvoType';
 
 @Component({
   selector: 'app-main',
@@ -17,12 +19,14 @@ import { RoomType } from '../../shared/models/RoomType';
 export class MainComponent {
 
   public roomType = RoomType;
+  public convoType = ConvoType;
   public chosenType$: Observable<RoomType>;
   public users$ : Observable<User[]>;
 
   constructor(
     private readonly store: Store<AppState>,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly router: Router
   ) {
     this.chosenType$ = this.store.pipe(
       select(selectRoomType),
@@ -38,5 +42,9 @@ export class MainComponent {
   public onToggleChange(roomType: RoomType): void {
     console.log(roomType);
     this.store.dispatch(setRoomType({roomType}));
+  }
+
+  public openConversation(id: string, type: ConvoType) : void {
+    this.router.navigate(['main/conversation'], {queryParams: {type, id}});
   }
 }

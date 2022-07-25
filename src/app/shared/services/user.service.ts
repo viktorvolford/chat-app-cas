@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { collection, Firestore, addDoc } from '@angular/fire/firestore';
 import { debounceTime, distinctUntilChanged, from, map, Observable, ReplaySubject, share, startWith, switchMap, take, tap } from 'rxjs';
 import { User } from '../models/User';
 import { AbstractControl } from '@angular/forms';

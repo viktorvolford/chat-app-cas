@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app'; 
 import { Observable, ReplaySubject, share } from 'rxjs';
-import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { User } from '../models/User';
 
@@ -14,7 +13,6 @@ export class AuthService {
   constructor(
     private readonly auth: AngularFireAuth,
     private readonly userService: UserService,
-    private readonly router: Router
     ) {}
 
   public loginWithEmailPassword(email: string, password: string) : Promise<any> {
@@ -22,8 +20,12 @@ export class AuthService {
   }
 
   public loginWithGoogle() : Promise<any> {
-    const googleAuthProvider = new firebase.auth.GoogleAuthProvider;
-    return this.auth.signInWithPopup(googleAuthProvider);
+    const provider = new firebase.auth.GoogleAuthProvider;
+    return this._loginWithProvider(provider);
+  }
+
+  private _loginWithProvider<T extends firebase.auth.AuthProvider>(provider: T) : Promise<any> {
+    return this.auth.signInWithPopup(provider);
   }
 
   public signup(user: User, password: string) : Promise<any> {

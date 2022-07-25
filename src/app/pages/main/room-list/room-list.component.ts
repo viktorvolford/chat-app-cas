@@ -1,13 +1,11 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/Room';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
 import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.component';
 import { User } from '../../../shared/models/User';
 import { ToastService } from '../../../shared/services/toast.service';
-import { ConvoType } from '../../../shared/models/ConvoType';
 import { RoomType } from '../../../shared/models/RoomType';
 
 @Component({
@@ -29,20 +27,20 @@ export class RoomListComponent {
   }
 
   @Input() public chosenType!: RoomType;
+  @Output() public openChatroom: EventEmitter<string> = new EventEmitter();
 
   public rooms$ : Observable<Room[]>;
 
   constructor(
     private readonly roomService: RoomService,
-    private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly toast: ToastService
     ) {
       this.rooms$ = this.roomService.rooms$;
     }
 
-  public openChatroom(id: string){
-    this.router.navigate(['main/conversation'], {queryParams: {type: ConvoType.Room, id: id}});
+  public onOpenChatroom(id: string){
+    this.openChatroom.emit(id);
   }
 
   public openDialog(room: Room){
@@ -50,7 +48,7 @@ export class RoomListComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result === room.password){
-        this.openChatroom(room.id);
+        this.onOpenChatroom(room.id);
       } else if(result !== undefined && result !== null){
         this.toast.createSnackBar('MAIN.INCORRECT_PASSWORD','COMMON.OK');
       }
