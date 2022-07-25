@@ -46,7 +46,7 @@ export class CreateRoomComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public add(event: MatChipInputEvent, users: User[]): void {
+  public add(event: MatChipInputEvent, users: Pick<User, 'username'>[]): void {
     const value = event.value;
 
     // Add our member

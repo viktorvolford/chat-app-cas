@@ -59,7 +59,7 @@ export class UserService {
   }
 
   //For Google login method
-  public createUserIfNonExisting(cred: UserCredential): void {
+  public createUserIfNonExisting(cred: Pick<UserCredential, 'user'>): void {
     this.getById(cred.user.uid).pipe(take(1)).subscribe(data => {
       if(!data){
         const user : User = {
@@ -77,7 +77,7 @@ export class UserService {
     });
   }
 
-  public createUserWithCred(user: User, cred: UserCredential): void {
+  public createUserWithCred(user: User, cred: Pick<UserCredential, 'user'>): void {
     const newUser : User = Object.assign({}, user);
     newUser.id = cred.user.uid;
     this.createUser(newUser);

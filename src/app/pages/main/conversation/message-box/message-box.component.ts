@@ -12,7 +12,7 @@ export class MessageBoxComponent implements OnInit {
 
   @Input() message! : Message;
   @Input() loggedInUser! : string;
-  @Input() users : User[] = [];
+  @Input() users! : User[];
 
   @Output() deleteMessage: EventEmitter<Message> = new EventEmitter();
   @Output() editMessage: EventEmitter<Message> = new EventEmitter();

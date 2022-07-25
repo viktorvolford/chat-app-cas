@@ -18,7 +18,7 @@ export class RoomBoxComponent {
   @Output() private openChatroom: EventEmitter<string> = new EventEmitter();
 
   @Input() public room!: Room;
-  @Input() public users: User[] | null = [];
+  @Input() public users!: User[];
   @Input() public chosenType!: RoomType;
   @Input() public isEven!: Boolean;
 

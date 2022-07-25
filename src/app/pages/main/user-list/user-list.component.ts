@@ -25,7 +25,7 @@ export class UserListComponent {
     this.openConversation.emit(id);
   }
 
-  public isOnline(user: User): boolean {
+  public isOnline(user: Pick<User, 'last_active'>): boolean {
     return new Date().getTime() - user.last_active > 60001 ? false : true;
   }
 

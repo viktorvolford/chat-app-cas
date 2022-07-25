@@ -43,7 +43,7 @@ export class RoomListComponent {
     this.openChatroom.emit(id);
   }
 
-  public openDialog(room: Room){
+  public openDialog(room: Pick<Room, 'name' | 'password' | 'id'>){
     const dialogRef = this.dialog.open(ProtectedDialogComponent, {data: {roomName: room.name}});
 
     dialogRef.afterClosed().subscribe(result => {
