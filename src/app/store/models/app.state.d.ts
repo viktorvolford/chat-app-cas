@@ -1,5 +1,7 @@
-import { ConvoType, Message } from "../../shared/models/Message";
-import { Room, RoomType } from "../../shared/models/Room";
+import { Message } from "../../shared/models/Message";
+import { ConvoType } from "../../shared/models/ConvoType";
+import { Room } from "../../shared/models/Room";
+import { RoomType } from "../../shared/models/RoomType";
 import { User } from "../../shared/models/User";
 
 export interface AppState {

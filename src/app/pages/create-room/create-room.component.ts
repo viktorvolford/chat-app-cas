@@ -7,7 +7,7 @@ import { User } from '../../shared/models/User';
 import { UserService } from '../../shared/services/user.service';
 import { RoomService } from '../../shared/services/room.service';
 import { Observable } from 'rxjs';
-import { RoomType } from '../../shared/models/Room';
+import { RoomType } from '../../shared/models/RoomType';
 
 @Component({
   selector: 'app-create-room',

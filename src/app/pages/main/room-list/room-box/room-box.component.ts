@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../../../shared/models/User';
-import { Room, RoomType } from '../../../../shared/models/Room';
+import { Room } from '../../../../shared/models/Room';
+import { RoomType } from '../../../../shared/models/RoomType';
+
 
 @Component({
   selector: 'app-room-box',

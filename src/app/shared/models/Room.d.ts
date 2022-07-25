@@ -1,3 +1,5 @@
+import { RoomType } from "./RoomType";
+
 export interface Room {
     id: string,
     members: Array<string>,
@@ -6,9 +8,3 @@ export interface Room {
     type: RoomType,
     password: string
 }
-
-export enum RoomType {
-    Public,
-    Private,
-    Protected
-};

@@ -4,14 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { combineLatest, distinctUntilChanged, Observable, ReplaySubject, share, take } from 'rxjs';
 import { User } from '../../../shared/models/User';
 import { RoomService } from '../../../shared/services/room.service';
-import { ConvoType, Message } from '../../../shared/models/Message';
+import { Message } from '../../../shared/models/Message';
+import { ConvoType } from '../../../shared/models/ConvoType';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/models/app.state';
 import { selectConvoId, selectConvoType } from '../../../store/selectors/convo.selector';
 import { setConvoId, setConvoType } from '../../../store/actions/convo.actions';
-import { SessionService } from 'src/app/shared/services/session.service';
+import { SessionService } from '../../../shared/services/session.service';
 
 @Component({
   selector: 'app-conversation',

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ConvoType, Message } from '../models/Message';
+import { Message } from '../models/Message';
+import { ConvoType } from '../models/ConvoType';
 import { combineLatest, map, Observable, of, ReplaySubject, share, switchMap, tap } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';

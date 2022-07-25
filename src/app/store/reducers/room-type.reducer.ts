@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { RoomType } from 'src/app/shared/models/Room';
+import { RoomType } from '../../shared/models/RoomType';
 import {
     setRoomType
 } from '../actions/room-type.actions';

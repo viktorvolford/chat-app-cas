@@ -1,3 +1,5 @@
+import { ConvoType } from "./ConvoType";
+
 export interface Message {
     id: string,
     date: number,
@@ -5,9 +7,4 @@ export interface Message {
     sender_id: string,
     target_id: string,
     type: ConvoType
-}
-
-export enum ConvoType {
-    Personal,
-    Room
 }

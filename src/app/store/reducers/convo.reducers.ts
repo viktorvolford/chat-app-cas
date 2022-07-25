@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { ConvoType } from 'src/app/shared/models/Message';
+import { ConvoType } from '../../shared/models/ConvoType';
 import {
     setConvoId,
     setConvoType

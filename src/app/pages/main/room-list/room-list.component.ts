@@ -1,13 +1,14 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RoomService } from '../../../shared/services/room.service';
-import { Room, RoomType } from '../../../shared/models/Room';
+import { Room } from '../../../shared/models/Room';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
 import { ProtectedDialogComponent } from './protected-dialog/protected-dialog.component';
 import { User } from '../../../shared/models/User';
 import { ToastService } from '../../../shared/services/toast.service';
-import { ConvoType } from 'src/app/shared/models/Message';
+import { ConvoType } from '../../../shared/models/ConvoType';
+import { RoomType } from '../../../shared/models/RoomType';
 
 @Component({
   selector: 'app-room-list',

@@ -5,8 +5,8 @@ import { User } from '../../shared/models/User';
 import { setRoomType } from '../../store/actions/room-type.actions';
 import { selectRoomType } from '../../store/selectors/room-type.selector';
 import { AppState } from '../../store/models/app.state';
-import { UserService } from 'src/app/shared/services/user.service';
-import { RoomType } from 'src/app/shared/models/Room';
+import { UserService } from '../../shared/services/user.service';
+import { RoomType } from '../../shared/models/RoomType';
 
 @Component({
   selector: 'app-main',

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ConvoType } from 'src/app/shared/models/Message';
+import { ConvoType } from 'src/app/shared/models/ConvoType';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { User } from '../../../shared/models/User';
 

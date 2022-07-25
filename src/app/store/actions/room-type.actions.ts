@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { RoomType } from 'src/app/shared/models/Room';
+import { RoomType } from '../../shared/models/RoomType';
 
 export const setRoomType = createAction(
     '[Main Component] Room Type Set',
