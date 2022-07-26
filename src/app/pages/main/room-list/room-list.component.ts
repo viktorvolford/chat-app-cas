@@ -16,16 +16,7 @@ import { RoomType } from '../../../shared/models/RoomType';
 })
 export class RoomListComponent {
 
-  private _users! : User[];
-
-  @Input()
-  set users(users: User[] | null){
-    this._users = users ?? [];
-  }
-  get users() : User[] {
-    return this._users;
-  }
-
+  @Input() public users! : User[];
   @Input() public chosenType!: RoomType;
   @Output() public openChatroom: EventEmitter<string> = new EventEmitter();
 

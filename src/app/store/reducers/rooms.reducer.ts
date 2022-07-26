@@ -5,7 +5,7 @@ import {
     roomCreated
 } from '../actions/rooms.actions';
 
-export const initialState = Array<Room>();
+export const initialState : Array<Room> = [];
 
 export const roomsReducer = createReducer(
     initialState,

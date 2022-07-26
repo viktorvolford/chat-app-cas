@@ -20,7 +20,7 @@
             
             <app-room-list 
             [chosenType]="(chosenType$ | async)!" 
-            [users]="users.userList"
+            [users]="users.userList!"
             (openChatroom)="openConversation($event, convoType.Room)">
             </app-room-list>
         </div>
